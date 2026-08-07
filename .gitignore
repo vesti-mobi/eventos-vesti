@@ -1,0 +1,16 @@
+# SEGREDOS: token do HubSpot e chave do Google — nunca versionar
+config.json
+google-service-account.json
+*service-account*.json
+
+# Artefatos de teste (Playwright / screenshots)
+.playwright-mcp/
+*.png
+*.log
+
+# Python
+__pycache__/
+
+# SO
+Thumbs.db
+.DS_Store

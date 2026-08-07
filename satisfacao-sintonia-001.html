@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sintonia: Criação e Vendas #001 · Satisfação dos Convidados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:      #F4EFE6;
+    --paper-2:    #EDE6D9;
+    --paper-3:    #E5DCCB;
+    --ink:        #1C1916;
+    --ink-soft:   #57514A;
+    --ink-faint:  #8A8177;
+    --line:       #D7CDBC;
+    --line-soft:  #E2D9CA;
+
+    --wine:       #7C2B3A;
+    --wine-deep:  #5E1F2C;
+    --attend:     #3C5B4E;
+    --decline:    #8A3140;
+    --noshow:     #B4863C;
+    --pending:    #B1A38E;
+
+    --shadow: 0 1px 2px rgba(28,25,22,.04), 0 12px 40px -18px rgba(28,25,22,.22);
+    --maxw: 1500px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  body {
+    font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(120% 80% at 12% -8%, rgba(124,43,58,.05), transparent 60%),
+      radial-gradient(90% 70% at 108% 4%, rgba(60,91,78,.045), transparent 55%);
+    line-height: 1.5;
+    padding: clamp(20px, 4vw, 56px) clamp(20px, 3.2vw, 52px) 84px;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: .5; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto; }
+  .grid-2 > *, .hero, .kpi, .panel, .rate, .cat { min-width: 0; }
+
+  /* ---------- Top bar ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+  .back { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--wine); text-decoration: none; padding: 9px 15px; border: 1px solid var(--line);
+    border-radius: 3px; background: var(--paper); transition: border-color .2s, background .2s; }
+  .back:hover { border-color: var(--wine); background: var(--paper-2); }
+  .topbar-actions { display: flex; align-items: center; gap: 14px; }
+  .refresh-status { font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
+  .btn-refresh { display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif;
+    font-size: 12.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #F4E9E2;
+    background: var(--wine); border: none; border-radius: 3px; padding: 11px 20px; cursor: pointer;
+    transition: background .2s, transform .08s; }
+  .btn-refresh:hover { background: var(--wine-deep); }
+  .btn-refresh:active { transform: translateY(1px); }
+  .btn-refresh:disabled { opacity: .6; cursor: default; }
+  .btn-refresh .ic { font-size: 15px; line-height: 1; }
+  .btn-refresh.loading .ic { animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Filtro de evento (multi-select, mesmo visual do painel) ---------- */
+  .topbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .ms-inline { display: flex; align-items: center; gap: 9px; }
+  .ms-cap { font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); }
+  .ms { position: relative; }
+  .ms-btn { font-family: "Archivo", sans-serif; font-size: 13.5px; font-weight: 500; color: var(--ink);
+    background-color: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 9px 36px 9px 13px;
+    min-width: 210px; cursor: pointer; text-align: left; appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C2B3A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; transition: border-color .2s; }
+  .ms-btn:hover, .ms-btn.open { border-color: var(--wine); outline: none; }
+  .ms-btn .ms-txt { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ms-panel { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 100%; max-width: 360px;
+    max-height: 320px; overflow-y: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 4px;
+    box-shadow: var(--shadow); padding: 6px; }
+  .ms-opt { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 3px; cursor: pointer;
+    font-size: 13px; color: var(--ink-soft); user-select: none; }
+  .ms-opt:hover { background: rgba(124,43,58,.06); }
+  .ms-opt.on { color: var(--ink); font-weight: 600; }
+  .ms-opt input { flex: none; width: 15px; height: 15px; accent-color: var(--wine); cursor: pointer; }
+  .ms-all { font-weight: 600; color: var(--ink); }
+  .ms-sep { height: 1px; background: var(--line-soft); margin: 5px 6px; }
+  @media (max-width: 620px){ .ms-btn { min-width: 170px; } }
+
+  /* ---------- Masthead ---------- */
+  .kicker { font-size: 11.5px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase;
+            color: var(--wine); display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .kicker::before, .kicker::after { content: ""; width: 34px; height: 1.5px; background: var(--wine); display: inline-block; }
+  .masthead { text-align: center; padding-bottom: 26px; border-bottom: 1.5px solid var(--ink); margin-bottom: 6px; }
+  .masthead h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-optical-sizing: auto;
+    font-size: clamp(28px, 4.6vw, 56px); line-height: 1.06; letter-spacing: -.015em; margin: 16px 0 14px; text-wrap: balance; }
+  .masthead h1 .hl { color: var(--wine); font-style: italic; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: center; font-size: 13px; color: var(--ink-soft); }
+  .meta-row .m { display: inline-flex; align-items: center; gap: 8px; }
+  .meta-row .m svg { flex: none; opacity: .8; }
+  .meta-row .dot { color: var(--ink-faint); }
+
+  section { margin-top: clamp(40px, 6vw, 68px); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .sec-head h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 27px); letter-spacing: -.01em; }
+  .sec-head .idx { font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-faint); }
+
+  /* ---------- Hero KPIs ---------- */
+  .hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line);
+          border: 1px solid var(--line); border-radius: 3px; overflow: hidden; margin-top: 22px; }
+  .kpi { background: var(--paper); padding: 26px 22px 24px; }
+  .kpi.feature { background: var(--wine); color: #F4E9E2; }
+  .kpi .lbl { font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; min-height: 2.4em; }
+  .kpi.feature .lbl { color: rgba(244,233,226,.72); }
+  .kpi .fig { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-optical-sizing: auto;
+    font-size: clamp(38px, 5vw, 54px); line-height: .92; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .kpi .fig small { font-size: .42em; font-weight: 600; color: var(--ink-faint); letter-spacing: 0; }
+  .kpi.feature .fig small { color: rgba(244,233,226,.7); }
+  .kpi .sub { margin-top: 12px; font-size: 12.5px; color: var(--ink-soft); }
+  .kpi.feature .sub { color: rgba(244,233,226,.8); }
+  .kpi .sub b { font-weight: 600; color: var(--ink); }
+  .kpi.feature .sub b { color: #fff; }
+  @media (max-width: 980px){ .hero { grid-template-columns: repeat(2,1fr); } .kpi .lbl { min-height: 0; } }
+  @media (max-width: 440px){ .hero { grid-template-columns: 1fr; } }
+
+  /* ---------- Panels ---------- */
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 26px; box-shadow: var(--shadow); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 820px){ .grid-2 { grid-template-columns: 1fr; } }
+  .panel h3 { font-family: "Archivo"; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 20px; }
+
+  .stack { display: flex; height: 46px; border-radius: 3px; overflow: hidden; margin-bottom: 20px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06); }
+  .stack .seg { position: relative; transition: flex .5s cubic-bezier(.2,.7,.2,1); min-width: 0; }
+  .stack .seg span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 28px; }
+  @media (max-width: 560px){ .legend { grid-template-columns: 1fr; } }
+  .legend .lg { display: flex; align-items: baseline; gap: 10px; font-size: 13px; }
+  .legend .sw { width: 11px; height: 11px; border-radius: 2px; flex: none; transform: translateY(1px); }
+  .legend .lg .n { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .legend .lg .t { color: var(--ink-soft); }
+  .legend .lg .p { margin-left: auto; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .note { margin-top: 18px; font-size: 13px; color: var(--ink-soft); }
+  .note b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Rating cards ---------- */
+  .rate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 820px){ .rate-grid { grid-template-columns: 1fr; } }
+  .rate { background: var(--paper-2); border: 1px solid var(--line); border-radius: 4px; padding: 22px 20px; }
+  .rate .rlbl { font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+  .rate .rnum { font-family: "Fraunces", serif; font-weight: 600; font-size: 40px; line-height: 1; letter-spacing: -.02em; color: var(--wine); font-variant-numeric: tabular-nums; }
+  .rate .rnum small { font-size: .4em; color: var(--ink-faint); font-weight: 600; }
+  .dots { display: flex; gap: 6px; margin-top: 14px; }
+  .dots .d { width: 15px; height: 15px; border-radius: 50%; background: var(--paper-3); box-shadow: inset 0 0 0 1px rgba(28,25,22,.1); }
+  .dots .d.on { background: var(--wine); box-shadow: none; }
+  .dots .d.half { background: linear-gradient(90deg, var(--wine) 50%, var(--paper-3) 50%); }
+  .minibars { margin-top: 16px; display: flex; flex-direction: column; gap: 9px; }
+  .mb { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 10px; font-size: 12px; color: var(--ink-soft); }
+  .mb .mtrack { height: 8px; background: var(--paper-3); border-radius: 999px; overflow: hidden; }
+  .mb .mfill { height: 100%; background: var(--wine); border-radius: 999px; transition: width .5s cubic-bezier(.2,.7,.2,1); }
+  .mb .mval { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Horizontal bars (parte favorita) ---------- */
+  .bars { display: flex; flex-direction: column; gap: 14px; }
+  .bar-row { display: grid; grid-template-columns: 128px 1fr auto; align-items: center; gap: 14px; }
+  .bar-row .bname { font-size: 13.5px; color: var(--ink-soft); text-align: right; }
+  .bar-row .btrack { height: 26px; background: var(--paper-3); border-radius: 3px; overflow: hidden; }
+  .bar-row .bfill { height: 100%; background: linear-gradient(90deg, var(--wine-deep), var(--wine)); border-radius: 3px; transition: width .6s cubic-bezier(.2,.7,.2,1); min-width: 2px; }
+  .bar-row .bval { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 560px){ .bar-row { grid-template-columns: 96px 1fr auto; } }
+
+  .split-bar { display: flex; height: 40px; border-radius: 3px; overflow: hidden; margin: 0 0 18px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06); }
+  .split-bar .s { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 13px; min-width: 0; }
+  .split-legend { display: flex; flex-direction: column; gap: 12px; }
+  .split-legend .row { display: flex; align-items: baseline; gap: 12px; }
+  .split-legend .row .sw { width: 12px; height: 12px; border-radius: 2px; transform: translateY(2px); flex:none; }
+  .split-legend .row .txt { font-size: 13.5px; }
+  .split-legend .row .val { margin-left: auto; font-family: "Fraunces", serif; font-weight: 600; font-size: 18px; font-variant-numeric: tabular-nums; }
+
+  /* ---------- Quote cards ---------- */
+  .reasons { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  @media (max-width: 720px){ .reasons { grid-template-columns: 1fr; } }
+  .reason { background: var(--paper-2); border-left: 2.5px solid var(--attend); border-radius: 0 3px 3px 0; padding: 14px 16px; }
+  .reason.improve { border-left-color: var(--noshow); }
+  .reason .rtext { font-size: 13.5px; color: var(--ink); font-style: italic; font-family: "Fraunces", serif; line-height: 1.55; white-space: pre-line; }
+  .reason .rtext::before { content: "“"; color: var(--attend); font-size: 20px; margin-right: 2px; }
+  .reason.improve .rtext::before { color: var(--noshow); }
+  .reason .rwho { margin-top: 10px; display: flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif;
+    font-size: 10.5px; letter-spacing: .05em; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; }
+  .reason .rwho .badge { color: var(--attend); background: rgba(60,91,78,.12); border-radius: 999px; padding: 2px 8px; }
+  .reason.improve .rwho .badge { color: var(--noshow); background: rgba(180,134,60,.14); }
+
+  /* ---------- Temas ---------- */
+  .temas { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  @media (max-width: 720px){ .temas { grid-template-columns: 1fr; } }
+  .tema { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; background: var(--paper-2);
+    border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; }
+  .tema .tnum { font-family: "Fraunces", serif; font-weight: 600; font-size: 30px; line-height: 1; color: var(--wine); font-variant-numeric: tabular-nums; }
+  .tema .tnum small { display: block; font-family: "Archivo"; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin-top: 4px; }
+  .tema .ttitle { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .tema .tdesc { margin-top: 5px; font-size: 12.5px; color: var(--ink-soft); }
+
+  .insight { margin-top: 20px; padding: 16px 18px; background: var(--paper-2); border: 1px dashed var(--line); border-radius: 4px; font-size: 13.5px; color: var(--ink-soft); }
+  .insight b { color: var(--ink); font-weight: 600; }
+  .anon-note { margin-top: 14px; font-size: 12px; color: var(--ink-faint); font-style: italic; }
+
+  footer { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-faint); }
+  footer b { color: var(--ink-soft); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="back" href="painel-sintonia-001.html">← Voltar ao painel</a>
+      <div class="ms-inline"><span class="ms-cap">Evento</span><div id="ms-evento"></div></div>
+    </div>
+    <div class="topbar-actions">
+      <span class="refresh-status" id="refresh-status"></span>
+      <button class="btn-refresh" id="btn-refresh" title="Puxar as respostas da planilha agora"><span class="ic">⟳</span> Atualizar</button>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="kicker">Satisfação dos Convidados · Formulário pós-evento</div>
+    <h1 id="ev-nome"></h1>
+    <div class="meta-row" id="ev-meta"></div>
+  </header>
+
+  <div class="hero" id="hero"></div>
+
+  <section>
+    <div class="sec-head"><h2>Distribuição das notas</h2><span class="idx">01 — NPS</span></div>
+    <div class="panel">
+      <h3>Nota geral de 0 a 10 (recomendação)</h3>
+      <div class="stack" id="nps-stack"></div>
+      <div class="legend" id="nps-legend"></div>
+      <div class="note" id="nps-note"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Avaliações específicas</h2><span class="idx">02 — Palestra · Restaurante · Horário</span></div>
+    <div class="panel">
+      <div class="rate-grid" id="rate-grid"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Experiência</h2><span class="idx">03 — Preferências</span></div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Parte favorita do evento</h3>
+        <div class="bars" id="fav-bars"></div>
+      </div>
+      <div class="panel">
+        <h3>Voltaria ao próximo evento?</h3>
+        <div class="split-bar" id="next-bar"></div>
+        <div class="split-legend" id="next-legend"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>O que mais gostaram</h2><span class="idx">04 — Elogios</span></div>
+    <div class="panel">
+      <div class="reasons" id="likes"></div>
+      <div class="note" id="likes-note"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>O que pode melhorar</h2><span class="idx">05 — Sugestões</span></div>
+    <div class="panel">
+      <div class="reasons" id="improves"></div>
+      <div class="note" id="improves-note"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Temas recorrentes</h2><span class="idx">06 — Síntese</span></div>
+    <div class="panel">
+      <div class="temas" id="temas"></div>
+      <div class="insight" id="temas-insight"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Fonte: Google Sheets · aba <b>Formulário de satisfação</b> — respostas do formulário pós-evento.</span>
+    <span>Respostas de <b id="foot-range"></b> · gerado em <b id="foot-date"></b>.</span>
+  </footer>
+
+</div>
+
+<script>
+/* =================================================================
+   DADOS — snapshot da aba "Formulário de satisfação" (dados/satisfacao-001.json).
+   Cada resposta: score (0-10), score_reason, talk_rating (1-5), talk_relevance,
+   restaurant_rating (1-5), schedule_ok, favorite_part, improvements, next_event,
+   autor (hoje "Anônimo" — vira nome/marca quando tirarem o anonimato), created_at.
+   ================================================================= */
+let SAT = /*__SAT_DATA__*/ {
+  "gerado_em": "07/08/2026 12:41",
+  "eventos": {
+    "Sintonia: Criação e Vendas #001": {
+      "data_evento": "30/07/2026"
+    }
+  },
+  "respostas": [
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 8,
+      "score_reason": "Bom conteúdo e evento bem preparado, \nRestaurante ótimo mas um pouco fora de mão para a maioria e horário desfavorável",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "parcialmente",
+      "favorite_part": "networking",
+      "improvements": "Mais próximo do centro",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:49:37.437734+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "",
+      "talk_rating": 4,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 4,
+      "schedule_ok": "sim",
+      "favorite_part": "restaurante",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:45:14.022617+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Evento com bom papo e bons direcionamentos.\nSeria ótimo manter esses encontros para discussão de mercado, tendências, atualizações de programa e troca de experiências",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "Fui chamada com pouca antecedência e não tinha muitas infos  do que seria apresentado e fiquei meio perdida no início.\nGostaria de ter recebido um breefing do conteúdo",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:51:15.908831+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Networking incrível! Ambiente e horário fora do trabalho da pra ter mais qualidade no evento!",
+      "talk_rating": 4,
+      "talk_relevance": "parcialmente",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "Juntar mais lojistas de moda para ter mais experiências compartilhada e trazer convidados para palestrar! Fazer palestra no máximo de 40 minutos",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 16:55:15.827388+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 8,
+      "score_reason": "Gostei bastante da ideia principal de uma troca. Porém, senti que a palestra não condizia com o atual momento do mercado. Ou seja, a conversa da mesa tinha um tom mais \"sofrido\" e na palestra algo mais intangível.",
+      "talk_rating": 3,
+      "talk_relevance": "pouco_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "restaurante",
+      "improvements": "Acredito que uma palestra focada mais na dor do atacadista, ou de ideias de soluções. Eu entendo que a plataforma do tino vem pra ajudar e muito, pois organiza o negócio. Mas não salva o negócio. Acho que a parte de anúncios em si precisa ser discutida. Porque atrás de todos os números apresentados de existe um investimento pesado de ads por trás. O foco deveria ser em como sair desse limbo do ads e como o tino poderia ajudar no crescimento além do ads (que ficou um pouco velado para mim)",
+      "next_event": "talvez",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 15:06:11.12764+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "restaurante",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:11:21.850431+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Muito informativo, ajudou muito a esclarecer algumas dúvidas e trocar informações com os lojistas foi muito bom!!",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "palestra",
+      "improvements": "Não tem nenhum ponto a melhorar",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 00:51:44.974354+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Conteúdo claro e de muito valor",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "palestra",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 20:07:25.735048+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "A vesti está alinhada com a tendência de vendas no mercado da confecção",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:46:27.085406+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Acredito que novas informacoes sao sempre boas no momento de crise e transicao que estamos passsnado, cada um ta se adaptando, porem com o evento mostra que o caminho q estamos seguindo eh correto. podemos dividir informacoes e networking, Para mim pelo menos me fez lembra o qto devo aplicar o Tino o mais rapido possivel e usar",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "palestra",
+      "improvements": "talvez trazer um pouco mais de interacao entre os que estavam no evento, uma apresentacao de cada um. nao sei ...  ate pra agt saber quem esta por la",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 18:21:46.526659+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Principalmente o conteúdo passado sobre a nova atualização que vai nos ajudar muito e poder saber de algumas novidades que estão por aqui. Além de sair um pouco da rotina e poder conhecer pessoas que estão no mesmo ramo com os mesmos desafios. O lugar muito bom e bem servido\nAdoramos",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "Não identifiquei nada que pontuaria para melhorar...foi tudo leve, descontraído. Além de super atenciosos conosco. Achei o cuidado excelente",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 15:27:39.787368+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 18:47:09.035596+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Inovação e oportunidade para quem quer avançar no varejo online",
+      "talk_rating": 4,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "Criar pauta para os convidados, eu vim sem saber o que seria o evento ou mesmo se haveria algo",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 00:40:33.971625+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Novidades e tendências Vesti, e principalmente o networking com outros empresários",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 15:36:22.28308+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Vários motivos, mas principalmente o cuidado de vocês em\nnos receber muito bem, network de qualidade, e a apresentação do sistema, que estou ansioso pra testar.",
+      "talk_rating": 4,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 15:13:57.576891+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 9,
+      "score_reason": "foi uma otima experiencia com bons insights e comida deliciosa.",
+      "talk_rating": 4,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "restaurante",
+      "improvements": "As palestras podem continuar abordando temas para solucoes e insights dos lojistas.",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-08-01 13:20:54.444631+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 10,
+      "score_reason": "Comprometimento com os clientes",
+      "talk_rating": 5,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "networking",
+      "improvements": "",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 14:09:10.887121+00"
+    },
+    {
+      "event_name": "Sintonia: Criação e Vendas #001",
+      "score": 9,
+      "score_reason": "Vulnerabilidade e transparência dos cases",
+      "talk_rating": 4,
+      "talk_relevance": "muito_relevante",
+      "restaurant_rating": 5,
+      "schedule_ok": "sim",
+      "favorite_part": "palestra",
+      "improvements": "Começar um pouco mais próximo do horário inicial",
+      "next_event": "sim",
+      "autor": "Anônimo",
+      "created_at": "2026-07-31 00:58:34.321261+00"
+    }
+  ]
+} /*__END__*/;
+
+/* Temas recorrentes — síntese autoral a partir da leitura das sugestões atuais.
+   (Não é recalculado ao vivo; se as respostas mudarem muito, peça para regenerar.) */
+const TEMAS = [
+  { n: 3, titulo: "Palestra mais focada na dor do lojista", desc: "Menos teoria, mais soluções práticas e insights para o atacadista (inclusive além de ads)." },
+  { n: 2, titulo: "Pauta / briefing antes do evento", desc: "Convidados querem saber com antecedência o que será apresentado." },
+  { n: 2, titulo: "Horário & localização", desc: "Local mais central e começar mais próximo do horário combinado." },
+  { n: 2, titulo: "Mais interação entre convidados", desc: "Apresentação de cada participante para aquecer o networking." },
+];
+
+/* ---------- helpers ---------- */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const nfmt = (n, d = 1) => n.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const pct = n => Math.round(n * 100) + "%";
+
+const LABEL = {
+  relevance: { muito_relevante: "Muito relevante", parcialmente: "Parcialmente", pouco_relevante: "Pouco relevante", nao_relevante: "Não relevante" },
+  simsub:    { sim: "Sim", parcialmente: "Parcialmente", nao: "Não", "não": "Não", talvez: "Talvez" },
+  fav:       { networking: "Networking", restaurante: "Restaurante", palestra: "Palestra" },
+};
+const norm = s => String(s || "").trim().toLowerCase();
+
+/* ---------- multi-select com checkboxes (mesmo componente do painel) ----------
+   Estado interno: Set de valores marcados. Set vazio = "Todos" (sem filtro). */
+const _msMenus = [];
+function createMultiSelect(mount, { allLabel, noun, onChange }){
+  mount.classList.add("ms");
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.className = "ms-btn";
+  const panel = document.createElement("div");
+  panel.className = "ms-panel"; panel.hidden = true;
+  mount.append(btn, panel);
+  let options = [], selected = new Set();
+  const allValues = () => options.map(o => o.value);
+  const isAll = () => selected.size === 0;
+  const effective = () => isAll() ? allValues() : [...selected];
+  const normalize = set => (set.size >= options.length ? new Set() : set);
+  function summary(){
+    if (isAll()) return allLabel;
+    if (selected.size === 1){ const o = options.find(o => o.value === [...selected][0]); return o ? o.label : allLabel; }
+    return selected.size + " " + noun;
+  }
+  function draw(){
+    btn.innerHTML = `<span class="ms-txt">${esc(summary())}</span>`;
+    const all = isAll();
+    panel.innerHTML =
+      `<label class="ms-opt ms-all${all?" on":""}"><input type="checkbox" data-all ${all?"checked":""}><span>${esc(allLabel)}</span></label>` +
+      `<div class="ms-sep"></div>` +
+      options.map((o,i) => { const on = all || selected.has(o.value);
+        return `<label class="ms-opt${on?" on":""}"><input type="checkbox" data-i="${i}" ${on?"checked":""}><span>${esc(o.label)}</span></label>`; }).join("");
+  }
+  function close(){ panel.hidden = true; btn.classList.remove("open"); }
+  function open(){ _msMenus.forEach(c => c()); panel.hidden = false; btn.classList.add("open"); }
+  _msMenus.push(close);
+  btn.addEventListener("click", e => { e.stopPropagation(); panel.hidden ? open() : close(); });
+  panel.addEventListener("click", e => e.stopPropagation());
+  panel.addEventListener("change", e => {
+    const t = e.target; if (!t || t.tagName !== "INPUT") return;
+    if (t.hasAttribute("data-all")) selected = new Set();
+    else { const v = options[+t.getAttribute("data-i")].value;
+      const cur = isAll() ? new Set(allValues()) : new Set(selected);
+      cur.has(v) ? cur.delete(v) : cur.add(v); selected = normalize(cur); }
+    draw(); onChange && onChange();
+  });
+  document.addEventListener("click", () => { if (!panel.hidden) close(); });
+  return {
+    setOptions(next){ options = next; const valid = new Set(allValues());
+      selected = normalize(new Set([...selected].filter(v => valid.has(v)))); draw(); },
+    values: effective, isAll,
+  };
+}
+
+let msEvento;
+function eventNames(){
+  const nomes = [...new Set([
+    ...Object.keys(SAT.eventos || {}),
+    ...(SAT.respostas || []).map(r => r.event_name).filter(Boolean),
+  ])];
+  return nomes.length ? nomes : (SAT.evento ? [SAT.evento] : []);
+}
+function selectedEvents(){
+  const todos = eventNames();
+  const sel = (msEvento ? msEvento.values() : []).filter(v => todos.includes(v));
+  return sel.length ? sel : todos;
+}
+function rebuildFilter(){
+  msEvento.setOptions(eventNames().map(n => ({ value: n, label: n })));
+}
+
+function respostasDoEvento(){
+  const sel = new Set(selectedEvents());
+  return (SAT.respostas || []).filter(r => sel.has(r.event_name));
+}
+
+/* dots 1-5 (aceita meio ponto) */
+function dots(v){
+  let out = "";
+  for (let i = 1; i <= 5; i++){
+    const cls = v >= i ? "on" : (v >= i - 0.5 ? "half" : "");
+    out += `<span class="d ${cls}"></span>`;
+  }
+  return out;
+}
+
+function renderRange(rs){
+  const datas = rs.map(r => (r.created_at || "").slice(0, 10)).filter(Boolean).sort();
+  if (!datas.length) return "—";
+  const fmt = d => { const [y,m,dd] = d.split("-"); return `${dd}/${m}`; };
+  return datas[0] === datas[datas.length-1] ? fmt(datas[0]) : `${fmt(datas[0])}–${fmt(datas[datas.length-1])}`;
+}
+
+function render(){
+  const rs = respostasDoEvento();
+  const N = rs.length;
+  const scores = rs.map(r => r.score).filter(v => typeof v === "number");
+  const media = scores.length ? scores.reduce((a,b)=>a+b,0) / scores.length : 0;
+
+  const promo = scores.filter(v => v >= 9).length;
+  const neutro = scores.filter(v => v >= 7 && v <= 8).length;
+  const detra = scores.filter(v => v <= 6).length;
+  const nps = scores.length ? Math.round((promo - detra) / scores.length * 100) : 0;
+
+  const nextSim = rs.filter(r => norm(r.next_event) === "sim").length;
+  const nextTalvez = rs.filter(r => norm(r.next_event) === "talvez").length;
+  const nextNao = rs.filter(r => ["nao","não"].includes(norm(r.next_event))).length;
+
+  /* masthead + rodapé */
+  const evs = selectedEvents();
+  const umEvento = evs.length === 1;
+  const nome = umEvento ? evs[0] : `${evs.length} eventos selecionados`;
+  document.getElementById("ev-nome").innerHTML =
+    umEvento ? esc(nome).replace(/(#\d+)/, '<span class="hl">$1</span>') : esc(nome);
+  const dataEv = umEvento && SAT.eventos && SAT.eventos[evs[0]] ? (SAT.eventos[evs[0]].data_evento || "") : "";
+  document.getElementById("ev-meta").innerHTML =
+    (dataEv ? `<span class="m">${esc(dataEv)}</span><span class="dot">·</span>` : "") +
+    (evs.length > 1 ? `<span class="m">${evs.length} eventos</span><span class="dot">·</span>` : "") +
+    `<span class="m"><b>${N}</b>&nbsp;respostas</span>`;
+  document.getElementById("foot-range").textContent = renderRange(rs);
+  document.getElementById("foot-date").textContent = SAT.gerado_em || "—";
+
+  /* hero */
+  const hero = [
+    { lbl:"Nota média (0–10)", fig:`${nfmt(media)}<small>/10</small>`, feature:true, sub:`<b>${promo}</b> de ${N} deram 9 ou 10` },
+    { lbl:"NPS", fig:`${nps}`, sub:`${pct(promo/N)} promotores · ${detra} detratores` },
+    { lbl:"Respostas", fig:`${N}`, sub:`do formulário pós-evento` },
+    { lbl:"Voltariam ao próximo", fig:`${pct((nextSim)/N)}`, sub:`${nextSim} sim · ${nextTalvez} talvez · ${nextNao} não` },
+  ];
+  document.getElementById("hero").innerHTML = hero.map(k => `
+    <div class="kpi${k.feature?' feature':''}">
+      <div class="lbl">${k.lbl}</div><div class="fig">${k.fig}</div><div class="sub">${k.sub}</div>
+    </div>`).join("");
+
+  /* distribuição NPS */
+  const segs = [
+    { t:"Promotores (9–10)", n:promo, c:"var(--attend)" },
+    { t:"Neutros (7–8)", n:neutro, c:"var(--noshow)" },
+    { t:"Detratores (0–6)", n:detra, c:"var(--decline)" },
+  ];
+  document.getElementById("nps-stack").innerHTML = segs.map(s => {
+    const w = N ? s.n/N*100 : 0;
+    return `<div class="seg" style="flex:${s.n}; background:${s.c}">${w>8?`<span>${s.n}</span>`:""}</div>`;
+  }).join("");
+  document.getElementById("nps-legend").innerHTML = segs.map(s => `
+    <div class="lg"><span class="sw" style="background:${s.c}"></span>
+      <span class="n">${s.n}</span><span class="t">${s.t}</span>
+      <span class="p">${N?pct(s.n/N):"0%"}</span></div>`).join("");
+  const maxScore = Math.max(...scores), minScore = Math.min(...scores);
+  const nMax = scores.filter(v => v === maxScore).length;
+  document.getElementById("nps-note").innerHTML =
+    `Todas as notas entre <b>${minScore}</b> e <b>${maxScore}</b> · <b>${nMax}</b> deram nota máxima. ` +
+    (detra === 0 ? "Nenhuma nota de detrator." : `<b>${detra}</b> ${detra === 1 ? "nota" : "notas"} de detrator (0–6).`);
+
+  /* avaliações específicas */
+  const talkVals = rs.map(r => r.talk_rating).filter(v => typeof v === "number");
+  const restVals = rs.map(r => r.restaurant_rating).filter(v => typeof v === "number");
+  const talkMedia = talkVals.length ? talkVals.reduce((a,b)=>a+b,0)/talkVals.length : 0;
+  const restMedia = restVals.length ? restVals.reduce((a,b)=>a+b,0)/restVals.length : 0;
+
+  const relCounts = {};
+  rs.forEach(r => { const k = norm(r.talk_relevance); if (k) relCounts[k] = (relCounts[k]||0)+1; });
+  const relOrder = ["muito_relevante","parcialmente","pouco_relevante","nao_relevante"];
+  const relBars = relOrder.filter(k => relCounts[k]).map(k => {
+    const c = relCounts[k], w = N ? c/N*100 : 0;
+    return `<div class="mb"><span>${LABEL.relevance[k]||k}</span>
+      <span class="mtrack"><span class="mfill" style="width:${w}%"></span></span>
+      <span class="mval">${c}</span></div>`;
+  }).join("");
+
+  const schCounts = { sim:0, parcialmente:0, nao:0 };
+  rs.forEach(r => { const k = norm(r.schedule_ok); if (k==="sim") schCounts.sim++; else if (k==="parcialmente") schCounts.parcialmente++; else if (k) schCounts.nao++; });
+  const schBars = [["sim","Sim"],["parcialmente","Parcialmente"],["nao","Não"]].filter(([k])=>schCounts[k]).map(([k,lbl]) => {
+    const c = schCounts[k], w = N ? c/N*100 : 0;
+    return `<div class="mb"><span>${lbl}</span>
+      <span class="mtrack"><span class="mfill" style="width:${w}%"></span></span>
+      <span class="mval">${c}</span></div>`;
+  }).join("");
+
+  document.getElementById("rate-grid").innerHTML = `
+    <div class="rate">
+      <div class="rlbl">Palestra</div>
+      <div class="rnum">${nfmt(talkMedia)}<small>/5</small></div>
+      <div class="dots">${dots(talkMedia)}</div>
+      <div class="minibars">${relBars}</div>
+    </div>
+    <div class="rate">
+      <div class="rlbl">Restaurante</div>
+      <div class="rnum">${nfmt(restMedia)}<small>/5</small></div>
+      <div class="dots">${dots(restMedia)}</div>
+      <div class="minibars"><div class="mb"><span>Nota máxima</span>
+        <span class="mtrack"><span class="mfill" style="width:${N?restVals.filter(v=>v===5).length/N*100:0}%"></span></span>
+        <span class="mval">${restVals.filter(v=>v===5).length}</span></div></div>
+    </div>
+    <div class="rate">
+      <div class="rlbl">Horário adequado</div>
+      <div class="rnum">${pct(schCounts.sim/N)}</div>
+      <div class="minibars" style="margin-top:20px">${schBars}</div>
+    </div>`;
+
+  /* parte favorita */
+  const favCounts = {};
+  rs.forEach(r => { const k = norm(r.favorite_part); if (k) favCounts[k] = (favCounts[k]||0)+1; });
+  const favSorted = Object.entries(favCounts).sort((a,b)=>b[1]-a[1]);
+  const favMax = Math.max(...favSorted.map(f=>f[1]), 1);
+  document.getElementById("fav-bars").innerHTML = favSorted.map(([k,c]) => `
+    <div class="bar-row"><div class="bname">${LABEL.fav[k]||k}</div>
+      <div class="btrack"><div class="bfill" style="width:${c/favMax*100}%"></div></div>
+      <div class="bval">${c} · ${pct(c/N)}</div></div>`).join("");
+
+  /* voltaria ao próximo */
+  const nextSegs = [
+    { t:"Sim", n:nextSim, c:"var(--attend)" },
+    { t:"Talvez", n:nextTalvez, c:"var(--noshow)" },
+    { t:"Não", n:nextNao, c:"var(--decline)" },
+  ].filter(s => s.n > 0);
+  document.getElementById("next-bar").innerHTML = nextSegs.map(s => {
+    const w = N ? s.n/N*100 : 0;
+    return `<div class="s" style="flex:${s.n}; background:${s.c}">${w>10?pct(s.n/N):""}</div>`;
+  }).join("");
+  document.getElementById("next-legend").innerHTML = nextSegs.map(s => `
+    <div class="row"><span class="sw" style="background:${s.c}"></span>
+      <span class="txt">${s.t}</span><span class="val">${s.n}</span></div>`).join("");
+
+  /* elogios (score_reason) */
+  const likes = rs.filter(r => (r.score_reason||"").trim());
+  document.getElementById("likes").innerHTML = likes.map(r => `
+    <div class="reason">
+      <div class="rtext">${esc(r.score_reason.trim())}</div>
+      <div class="rwho"><span class="badge">Nota ${r.score}</span><span>${esc(r.autor||"Anônimo")}</span></div>
+    </div>`).join("");
+  document.getElementById("likes-note").innerHTML =
+    `<b>${likes.length}</b> de <b>${N}</b> deixaram um comentário sobre o que gostaram.`;
+
+  /* melhorias (improvements) */
+  const improves = rs.filter(r => (r.improvements||"").trim());
+  document.getElementById("improves").innerHTML = improves.map(r => `
+    <div class="reason improve">
+      <div class="rtext">${esc(r.improvements.trim())}</div>
+      <div class="rwho"><span class="badge">Nota ${r.score}</span><span>${esc(r.autor||"Anônimo")}</span></div>
+    </div>`).join("");
+  document.getElementById("improves-note").innerHTML =
+    `<b>${improves.length}</b> de <b>${N}</b> deixaram uma sugestão de melhoria.`;
+
+  /* temas */
+  document.getElementById("temas").innerHTML = TEMAS.map(t => `
+    <div class="tema">
+      <div class="tnum">${t.n}<small>menções</small></div>
+      <div><div class="ttitle">${esc(t.titulo)}</div><div class="tdesc">${esc(t.desc)}</div></div>
+    </div>`).join("");
+  document.getElementById("temas-insight").innerHTML =
+    `<b>Leitura:</b> a satisfação é altíssima (nota média ${nfmt(media)} e ${pct(nextSim/N)} voltariam). ` +
+    `As sugestões não são reclamações, e sim pedidos de <b>mais</b>: pauta antecipada, palestra mais aplicada ao dia a dia do lojista e mais espaço para o networking — que já é a parte favorita.`;
+}
+
+/* ---------- botão Atualizar (respostas ao vivo via servidor local) ---------- */
+const btnRefresh = document.getElementById("btn-refresh");
+const refreshStatus = document.getElementById("refresh-status");
+
+async function atualizar(silencioso){
+  btnRefresh.classList.add("loading");
+  btnRefresh.disabled = true;
+  if (!silencioso) refreshStatus.textContent = "Atualizando…";
+  try {
+    const res = await fetch("/api/satisfacao", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (!data || !Array.isArray(data.respostas)) throw new Error("resposta inválida");
+    SAT = { ...SAT, respostas: data.respostas };   // mantém o mapa de eventos/datas do snapshot
+    rebuildFilter();
+    render();
+    const hora = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    refreshStatus.textContent = "✓ Atualizado às " + hora;
+  } catch (e) {
+    refreshStatus.textContent = silencioso ? "" : "Sem servidor ao vivo — usando dados salvos";
+  } finally {
+    btnRefresh.classList.remove("loading");
+    btnRefresh.disabled = false;
+  }
+}
+btnRefresh.addEventListener("click", () => atualizar(false));
+
+msEvento = createMultiSelect(document.getElementById("ms-evento"), {
+  allLabel: "Todos os eventos", noun: "eventos", onChange: render,
+});
+rebuildFilter();
+render();
+/* No site publicado (GitHub Pages) não há servidor local: esconde o botão Atualizar. */
+const IS_LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
+if (IS_LOCAL) atualizar(true);
+else document.querySelector(".topbar-actions").style.display = "none";
+</script>
+</body>
+</html>

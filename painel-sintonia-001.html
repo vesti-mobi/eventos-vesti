@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sintonia: Criação e Vendas #001 · Relatório de Resultados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:      #F4EFE6;
+    --paper-2:    #EDE6D9;
+    --paper-3:    #E5DCCB;
+    --ink:        #1C1916;
+    --ink-soft:   #57514A;
+    --ink-faint:  #8A8177;
+    --line:       #D7CDBC;
+    --line-soft:  #E2D9CA;
+
+    --wine:       #7C2B3A;
+    --wine-deep:  #5E1F2C;
+    --attend:     #3C5B4E;
+    --decline:    #8A3140;
+    --noshow:     #B4863C;
+    --pending:    #B1A38E;
+
+    --shadow: 0 1px 2px rgba(28,25,22,.04), 0 12px 40px -18px rgba(28,25,22,.22);
+    --maxw: 1500px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  body {
+    font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(120% 80% at 12% -8%, rgba(124,43,58,.05), transparent 60%),
+      radial-gradient(90% 70% at 108% 4%, rgba(60,91,78,.045), transparent 55%);
+    line-height: 1.5;
+    padding: clamp(20px, 4vw, 56px) clamp(20px, 3.2vw, 52px) 84px;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: .5; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto; }
+  .grid-2 > *, .hero, .kpi, .panel, .funnel, .fstep, .cat { min-width: 0; }
+
+  /* ---------- Masthead ---------- */
+  .kicker { font-size: 11.5px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase;
+            color: var(--wine); display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .kicker::before, .kicker::after { content: ""; width: 34px; height: 1.5px; background: var(--wine); display: inline-block; }
+  .masthead { text-align: center; padding-bottom: 26px; border-bottom: 1.5px solid var(--ink); margin-bottom: 6px; }
+  .masthead h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-optical-sizing: auto;
+    font-size: clamp(28px, 4.6vw, 56px); line-height: 1.06; letter-spacing: -.015em; margin: 16px 0 14px; text-wrap: balance; }
+  .masthead h1 .hl { color: var(--wine); font-style: italic; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: center; font-size: 13px; color: var(--ink-soft); }
+  .meta-row .m { display: inline-flex; align-items: center; gap: 8px; }
+  .meta-row .m svg { flex: none; opacity: .8; }
+  .meta-row .dot { color: var(--ink-faint); }
+
+  /* ---------- Barra superior (botão satisfação) ---------- */
+  .pagebar { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+  .btn-sat { display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif;
+    font-size: 12.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--wine);
+    text-decoration: none; background: var(--paper); border: 1px solid var(--wine); border-radius: 3px;
+    padding: 10px 18px; transition: background .2s, color .2s; }
+  .btn-sat:hover { background: var(--wine); color: #F4E9E2; }
+  .btn-sat .ic { font-size: 14px; line-height: 1; }
+
+  /* ---------- Filtros ---------- */
+  .filters { position: relative; display: flex; flex-wrap: wrap; gap: 18px 30px; align-items: flex-end; justify-content: center; margin-top: 26px;
+             padding: 18px 22px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 4px; }
+  .filter { display: flex; flex-direction: column; gap: 7px; }
+  .filter label { font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); }
+  .filter select { font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 500; color: var(--ink);
+    background-color: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 10px 38px 10px 13px;
+    min-width: 240px; cursor: pointer; appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C2B3A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 13px center; transition: border-color .2s; }
+  .filter select:hover, .filter select:focus { border-color: var(--wine); outline: none; }
+
+  /* multi-select com checkboxes (mesmo visual do select acima) */
+  .ms { position: relative; }
+  .ms-btn { font-family: "Archivo", sans-serif; font-size: 14px; font-weight: 500; color: var(--ink);
+    background-color: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 10px 38px 10px 13px;
+    min-width: 240px; width: 100%; cursor: pointer; text-align: left; appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237C2B3A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 13px center; transition: border-color .2s; }
+  .ms-btn:hover, .ms-btn.open { border-color: var(--wine); outline: none; }
+  .ms-btn .ms-txt { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ms-panel { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 100%; max-width: 340px;
+    max-height: 320px; overflow-y: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 4px;
+    box-shadow: var(--shadow); padding: 6px; }
+  .ms-opt { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 3px; cursor: pointer;
+    font-size: 13.5px; color: var(--ink-soft); user-select: none; }
+  .ms-opt:hover { background: rgba(124,43,58,.06); }
+  .ms-opt.on { color: var(--ink); font-weight: 600; }
+  .ms-opt input { flex: none; width: 15px; height: 15px; accent-color: var(--wine); cursor: pointer; }
+  .ms-all { font-weight: 600; color: var(--ink); }
+  .ms-sep { height: 1px; background: var(--line-soft); margin: 5px 6px; }
+
+  .filters-actions { position: absolute; top: 18px; right: 22px; display: flex; align-items: center; gap: 14px; }
+  @media (max-width: 780px){ .filters-actions { position: static; margin: 6px auto 0; } }
+  .refresh-status { font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
+  .btn-refresh { display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif;
+    font-size: 12.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #F4E9E2;
+    background: var(--wine); border: none; border-radius: 3px; padding: 11px 20px; cursor: pointer;
+    transition: background .2s, transform .08s; }
+  .btn-refresh:hover { background: var(--wine-deep); }
+  .btn-refresh:active { transform: translateY(1px); }
+  .btn-refresh:disabled { opacity: .6; cursor: default; }
+  .btn-refresh .ic { font-size: 15px; line-height: 1; }
+  .btn-refresh.loading .ic { animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .filter-info { flex-basis: 100%; text-align: center; font-size: 12.5px; color: var(--ink-soft); }
+  .filter-info b { color: var(--ink); font-weight: 600; }
+
+  section { margin-top: clamp(40px, 6vw, 68px); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .sec-head h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: clamp(20px, 2.6vw, 27px); letter-spacing: -.01em; }
+  .sec-head .idx { font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-faint); }
+
+  /* ---------- Hero KPIs ---------- */
+  .hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line);
+          border: 1px solid var(--line); border-radius: 3px; overflow: hidden; margin-top: 22px; }
+  .kpi { background: var(--paper); padding: 26px 22px 24px; }
+  .kpi.feature { background: var(--wine); color: #F4E9E2; }
+  .kpi .lbl { font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; min-height: 2.4em; }
+  .kpi.feature .lbl { color: rgba(244,233,226,.72); }
+  .kpi .fig { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-optical-sizing: auto;
+    font-size: clamp(38px, 5vw, 54px); line-height: .92; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .kpi .sub { margin-top: 12px; font-size: 12.5px; color: var(--ink-soft); }
+  .kpi.feature .sub { color: rgba(244,233,226,.8); }
+  .kpi .sub b { font-weight: 600; color: var(--ink); }
+  .kpi.feature .sub b { color: #fff; }
+  @media (max-width: 980px){ .hero { grid-template-columns: repeat(2,1fr); } .kpi .lbl { min-height: 0; } }
+  @media (max-width: 440px){ .hero { grid-template-columns: 1fr; } }
+
+  /* ---------- Panels ---------- */
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 26px; box-shadow: var(--shadow); }
+  .grid-2 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; }
+  @media (max-width: 820px){ .grid-2 { grid-template-columns: 1fr; } }
+  .panel h3 { font-family: "Archivo"; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 20px; }
+
+  .stack { display: flex; height: 46px; border-radius: 3px; overflow: hidden; margin-bottom: 20px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06); }
+  .stack .seg { position: relative; transition: flex .5s cubic-bezier(.2,.7,.2,1); min-width: 0; }
+  .stack .seg span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 28px; }
+  @media (max-width: 720px){ .legend { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px){ .legend { grid-template-columns: 1fr; } }
+  .legend .lg { display: flex; align-items: baseline; gap: 10px; font-size: 13px; }
+  .legend .sw { width: 11px; height: 11px; border-radius: 2px; flex: none; transform: translateY(1px); }
+  .legend .lg .n { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .legend .lg .t { color: var(--ink-soft); }
+  .legend .lg .p { margin-left: auto; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+  .funnel { display: flex; flex-direction: column; gap: 10px; }
+  .fstep { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; }
+  .fstep .bar { height: 40px; border-radius: 3px; display: flex; align-items: center; padding-left: 14px; color: #fff; font-weight: 600; font-size: 14px; transition: width .5s cubic-bezier(.2,.7,.2,1); min-width: 26px; }
+  .fstep .side { font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+  .fstep .side b { font-family: "Fraunces", serif; font-size: 15px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .split-bar { display: flex; height: 40px; border-radius: 3px; overflow: hidden; margin: 8px 0 18px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06); }
+  .split-bar .s { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 13px; }
+  .split-legend { display: flex; flex-direction: column; gap: 14px; }
+  .split-legend .row { display: flex; align-items: baseline; gap: 12px; }
+  .split-legend .row .sw { width: 12px; height: 12px; border-radius: 2px; transform: translateY(2px); flex:none; }
+  .split-legend .row .txt { font-size: 13.5px; }
+  .split-legend .row .txt small { display: block; color: var(--ink-faint); font-size: 12px; margin-top: 1px; }
+  .split-legend .row .val { margin-left: auto; font-family: "Fraunces", serif; font-weight: 600; font-size: 18px; font-variant-numeric: tabular-nums; }
+
+  .single-cost { padding: 8px 2px 4px; }
+  .single-cost .sc-lbl { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px; }
+  .single-cost .sc-fig { font-family: "Fraunces", serif; font-weight: 600; font-optical-sizing: auto; font-size: clamp(44px, 5.5vw, 64px); line-height: .92; letter-spacing: -.02em; color: var(--wine); font-variant-numeric: tabular-nums; }
+  .single-cost .sc-sub { margin-top: 16px; font-size: 13px; color: var(--ink-soft); max-width: 36ch; }
+  .single-cost .sc-sub b { color: var(--ink); font-weight: 600; }
+
+  .cats { display: flex; flex-direction: column; gap: 13px; }
+  .cat { display: grid; grid-template-columns: 168px 1fr auto; align-items: center; gap: 14px; }
+  .cat .cname { font-size: 13px; color: var(--ink-soft); text-align: right; }
+  .cat .ctrack { height: 22px; background: var(--paper-3); border-radius: 2px; overflow: hidden; }
+  .cat .cfill { height: 100%; background: linear-gradient(90deg, var(--wine-deep), var(--wine)); border-radius: 2px; transition: width .6s cubic-bezier(.2,.7,.2,1); }
+  .cat .cval { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 560px){ .cat { grid-template-columns: 108px 1fr auto; } }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13.5px; }
+  thead th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); padding: 0 12px 10px; border-bottom: 1.5px solid var(--ink); }
+  thead th.num, tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody td { padding: 11px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  tbody tr:hover td { background: rgba(124,43,58,.03); }
+  tbody td .it { font-weight: 500; }
+  tbody td .ob { display:block; color: var(--ink-faint); font-size: 12px; margin-top: 2px; max-width: 42ch;}
+  tbody td .cattag { display:inline-block; margin-top:5px; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--wine); font-weight:600; }
+  tbody td.num.z { color: var(--ink-faint); }
+  .pill { font-size: 10.5px; font-weight: 600; letter-spacing: .06em; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; white-space: nowrap; }
+  .pill.pago { background: rgba(60,91,78,.14); color: var(--attend); }
+  .pill.isento { background: rgba(28,25,22,.07); color: var(--ink-soft); }
+  tfoot td { padding: 14px 12px 0; border-top: 1.5px solid var(--ink); font-weight: 700; }
+  tfoot td.num { font-family: "Fraunces", serif; font-size: 18px; font-variant-numeric: tabular-nums; }
+
+  .reasons { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  @media (max-width: 620px){ .reasons { grid-template-columns: 1fr; } }
+  .reason { background: var(--paper-2); border-left: 2.5px solid var(--decline); border-radius: 0 3px 3px 0; padding: 13px 16px; }
+  .reason .rtext { font-size: 13.5px; color: var(--ink); font-style: italic; font-family: "Fraunces", serif; }
+  .reason .rtext::before { content: "“"; color: var(--decline); font-size: 20px; margin-right: 2px; }
+  .reason .rwho { margin-top: 8px; font-family: "Archivo", sans-serif; font-size: 10.5px; letter-spacing: .05em; color: var(--ink-faint); font-weight: 500; text-transform: uppercase; }
+  .reason .rwho .brand { color: var(--ink-soft); }
+  .reason .rwho .sep { opacity: .5; margin: 0 5px; }
+  .reasons-note { margin-top: 16px; font-size: 13px; color: var(--ink-soft); }
+  .reasons-note b { color: var(--ink); font-weight: 600; }
+  .empty { font-size: 13.5px; color: var(--ink-faint); font-style: italic; padding: 4px 0; }
+  .insight { margin-top: 20px; padding: 16px 18px; background: var(--paper-2); border: 1px dashed var(--line); border-radius: 4px; font-size: 13.5px; color: var(--ink-soft); }
+  .insight b { color: var(--ink); font-weight: 600; }
+
+  .noshow-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  @media (max-width: 820px){ .noshow-list { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 520px){ .noshow-list { grid-template-columns: 1fr; } }
+  .ns-item { background: var(--paper-2); border-left: 2.5px solid var(--noshow); border-radius: 0 3px 3px 0; padding: 12px 15px; }
+  .ns-item .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .ns-item .br { margin-top: 3px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
+
+  footer { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-faint); }
+  footer b { color: var(--ink-soft); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="pagebar">
+    <a class="btn-sat" href="satisfacao-sintonia-001.html" target="_blank" rel="noopener"><span class="ic">☆</span> Formulário de satisfação</a>
+  </div>
+
+  <header class="masthead">
+    <div class="kicker">Relatório de Resultados · Evento Presencial</div>
+    <h1 id="ev-nome"></h1>
+    <div class="meta-row" id="ev-meta"></div>
+  </header>
+
+  <!-- ============ FILTROS ============ -->
+  <div class="filters">
+    <div class="filter">
+      <label>Evento</label>
+      <div id="ms-evento"></div>
+    </div>
+    <div class="filter">
+      <label>Responsável (quem convidou)</label>
+      <div id="ms-resp"></div>
+    </div>
+    <div class="filters-actions">
+      <span class="refresh-status" id="refresh-status"></span>
+      <button class="btn-refresh" id="btn-refresh" title="Puxar dados do HubSpot e da planilha agora"><span class="ic">⟳</span> Atualizar</button>
+    </div>
+    <div class="filter-info" id="f-info"></div>
+  </div>
+
+  <div class="hero" id="hero"></div>
+
+  <section>
+    <div class="sec-head"><h2>Presença dos convidados</h2><span class="idx">01 — HubSpot</span></div>
+    <div class="panel">
+      <h3>Distribuição da base convidada</h3>
+      <div class="stack" id="stack"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Custos por categoria</h2><span class="idx">02 — Planilha</span></div>
+    <div class="panel">
+      <div class="cats" id="cats"></div>
+      <table style="margin-top:32px">
+        <thead><tr><th>Item</th><th class="num">Qtd</th><th class="num">Custo unit.</th><th class="num">Total</th><th>Status</th></tr></thead>
+        <tbody id="cost-body"></tbody>
+        <tfoot><tr><td colspan="3">Total investido</td><td class="num" id="cost-total"></td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Por que recusaram</h2><span class="idx">03 — Recusas</span></div>
+    <div class="panel">
+      <div class="reasons" id="reasons"></div>
+      <div class="reasons-note" id="reasons-note"></div>
+      <div class="insight" id="insight"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Confirmaram mas não compareceram</h2><span class="idx">04 — No-show</span></div>
+    <div class="panel">
+      <div class="noshow-list" id="noshow-list"></div>
+      <div class="reasons-note" id="noshow-note"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Fonte: HubSpot · pipeline <b>Eventos Presenciais</b> (chave <b>nome_evento</b>, responsável = proprietário do deal) + Planilha de custos no Google Sheets.</span>
+    <span>Dados atualizados em <b id="foot-date"></b>.</span>
+  </footer>
+
+</div>
+
+<script>
+/* =================================================================
+   DADOS  — estrutura multi-evento. Para atualizar/adicionar eventos,
+   substitua este objeto (mesma estrutura de dados/sintonia-001.json).
+   Custos vêm da planilha (col. Categoria gasto / Local evento / Data evento).
+   Convidado (deal): n=nome, m=marca, f=fase, r=responsável, mot=motivo recusa.
+   ================================================================= */
+let DADOS = {
+  "eventos": [
+    {
+      "nome": "Sintonia: Criação e Vendas #001",
+      "local": "Rubaiyat - Faria Lima",
+      "data_evento": "30/07/2026",
+      "atualizado_em": "2026-08-07",
+      "custos": {
+        "total": 21913.16,
+        "itens": [
+          {
+            "item": "Aluguel do espaço (Sala Colômbia + VIP Rubaiyat)",
+            "obs": "Conseguimos a insenção do valor de locação",
+            "qtd": 2,
+            "unit": 2000.0,
+            "total": 0.0,
+            "status": "ISENTO",
+            "categoria": "Espaço"
+          },
+          {
+            "item": "Menu por convidado",
+            "obs": "Cotação de menu fechado para 45 convidados.",
+            "qtd": 45,
+            "unit": 270.75,
+            "total": 12183.75,
+            "status": "PAGO",
+            "categoria": "Alimentação"
+          },
+          {
+            "item": "Gorjeta App",
+            "obs": "",
+            "qtd": 1,
+            "unit": 1956.25,
+            "total": 1956.25,
+            "status": "PAGO",
+            "categoria": "Taxa Garçom"
+          },
+          {
+            "item": "Bebidas (vinho)",
+            "obs": "Consumimos o vinho do estabelecimento",
+            "qtd": 17,
+            "unit": 180.0,
+            "total": 3060.0,
+            "status": "PAGO",
+            "categoria": "Bebidas"
+          },
+          {
+            "item": "Estacionamento",
+            "obs": "Absorvemos o pagamento do estacionamento de todos que vieram de carro",
+            "qtd": 20,
+            "unit": 40.0,
+            "total": 800.0,
+            "status": "PAGO",
+            "categoria": "Estacionamento"
+          },
+          {
+            "item": "Audiovisual extra (TV, passador de slide, microfone, estrutura)",
+            "obs": "Cotar: TV, passador, microfone",
+            "qtd": 1,
+            "unit": 1500.0,
+            "total": 1500.0,
+            "status": "PAGO",
+            "categoria": "Audiovisual"
+          },
+          {
+            "item": "Menu impresso",
+            "obs": "Fizemos a impressão com o Marco",
+            "qtd": 45,
+            "unit": 5.0,
+            "total": 225.0,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Place cards impressos",
+            "obs": "Fizemos a impressão com o Marco",
+            "qtd": 45,
+            "unit": 7.35,
+            "total": 330.75,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Rolo etiquetas identificação",
+            "obs": "Etiqueta simples, adicionaremos o nome escrito a mão para identidicar os convidados",
+            "qtd": 1,
+            "unit": 28.81,
+            "total": 28.81,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Brinde (LIVRO)",
+            "obs": "Escolhemos o livro: A moda imita a vida",
+            "qtd": 20,
+            "unit": 51.09,
+            "total": 1021.8,
+            "status": "PAGO",
+            "categoria": "Brindes"
+          },
+          {
+            "item": "Etiquetadora",
+            "obs": "Adiquirimos a etiquetadora para facilitar a dinamica de todos os eventos",
+            "qtd": 1,
+            "unit": 778.0,
+            "total": 778.0,
+            "status": "PAGO",
+            "categoria": "Equipamentos"
+          },
+          {
+            "item": "Envelopes",
+            "obs": "Entregamos acessos do Tino no envelope",
+            "qtd": 1,
+            "unit": 28.8,
+            "total": 28.8,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          }
+        ]
+      },
+      "deals": [
+        {
+          "n": "Manuela",
+          "m": "Alcance Jeans",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Ara",
+          "m": "Skenn",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Cynthia Agopyan",
+          "m": "Skenn",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Cesar Bertini",
+          "m": "Vesti",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Luis Guilherme",
+          "m": "Ana Gonçalves",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estará no Chile"
+        },
+        {
+          "n": "Vitor",
+          "m": "Shanes",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Priscila",
+          "m": "Lovlity",
+          "f": "Confirmou mas não compareceu",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "David Silva",
+          "m": "Lovlity",
+          "f": "Confirmou mas não compareceu",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Felipe",
+          "m": "P.A Concept",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Renato",
+          "m": "Revanche",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Raquel",
+          "m": "Mamo",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Gilad",
+          "m": "Crocker",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Junior",
+          "m": "Tricomix",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Fabiana Carmona",
+          "m": "Tricomix",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Chung",
+          "m": "Manacá",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Hadi",
+          "m": "Consciência",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro",
+          "mot": "Estará fora, de férias."
+        },
+        {
+          "n": "Rafael",
+          "m": "Black Jeans",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Michael Prado",
+          "m": "Stefani",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Adela Olga Prado castro",
+          "m": "Stefani",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Dedier",
+          "m": "Villon Jeans",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Fica em Rio Preto e não estará em SP"
+        },
+        {
+          "n": "Pedro",
+          "m": "Pedro",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Lais",
+          "m": "Gitaa",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estará em viagem nessa data"
+        },
+        {
+          "n": "Fabio",
+          "m": "Groovy Forever",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Jessica Chung",
+          "m": "Groovy Forever",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Rodrigo",
+          "m": "Artecor",
+          "f": "Confirmou mas não compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Leila ",
+          "m": "Le Ricard",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Tellos",
+          "m": "Anemone",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Disse somente que não vai poder ir"
+        },
+        {
+          "n": "German Kim",
+          "m": "La Chocole",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Angela",
+          "m": "Planet Girls",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "André",
+          "m": "Aline mezzari",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Carol",
+          "m": "Karmani",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Karla",
+          "m": "Donna Ritz",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Verusca Tomioka",
+          "m": "Donna Ritz",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Abraham Hwang",
+          "m": "Nanaminze",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Carlos",
+          "m": "Santa Prata",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "David Lee",
+          "m": "Innocence",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Bruno Lee",
+          "m": "Pury",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "David Kang",
+          "m": "Adama",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Patricia",
+          "m": "Karmani",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Vitor",
+          "m": "Maite Miyao ",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Dany Tahan",
+          "m": "Optimist Jeans ",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Marcelo",
+          "m": "Charisma",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Victor",
+          "m": "Surfável",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Luiza",
+          "m": "Karmani",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Hyun",
+          "m": "AttaSoft",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Wagner",
+          "m": "AttaSoft",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Marcelo Kuperchmit",
+          "m": "Figo",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Marcelo Pereira",
+          "m": "Figo",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Ademir",
+          "m": "Darlook",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Kaique",
+          "m": "Darlook",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Daniel Haut",
+          "m": "Benesh",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Rafaela",
+          "m": "Aurore Clothing",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Guilherme Rosas",
+          "m": "Agencia Glads",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Leonardo Pessutti",
+          "m": "Agencia Glads",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Josep",
+          "m": "Incentive",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Camila Kim",
+          "m": "Incentive",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Rodrigo",
+          "m": "Coqueta",
+          "f": "Recusou",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Hugo",
+          "m": "Doce Deleite",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Diana Choi Jung",
+          "m": "Doce Deleite",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "5511971528866",
+          "m": "Conceito Mika",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Lorena",
+          "m": "Conceito Mika",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Luciana de Paula",
+          "m": "Nova Versão Roupas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Danilo Barboza Tieghi",
+          "m": "Nova Versão Roupas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Mariana",
+          "m": "Equivoco",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Eduardo Campello",
+          "m": "Equivoco",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Dione",
+          "m": "Danque",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Fran Kang",
+          "m": "Lesto",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Luis Seo",
+          "m": "Lesto",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Daniela",
+          "m": "MonClos",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Marcelo Kim",
+          "m": "Winnie Modas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Elisabete Yoo",
+          "m": "Winnie Modas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Samuel",
+          "m": "Kayla",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Luana Dantas",
+          "m": "Artecor",
+          "f": "Confirmou mas não compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Felpe",
+          "m": "Nanaminze",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Felipe",
+          "m": "Jay Jones",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estara viajando"
+        }
+      ]
+    }
+  ],
+  "gerado_em": "07/08/2026 12:41"
+};
+
+/* ---------- helpers ---------- */
+const brl  = n => "R$ " + n.toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+const brl0 = n => "R$ " + n.toLocaleString("pt-BR", {maximumFractionDigits:0});
+const pct  = n => (n*100).toLocaleString("pt-BR", {minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
+const fmtDate = iso => { const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; };
+const ICON_PIN = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7C2B3A" stroke-width="2"><path d="M12 21s-7-6.7-7-12a7 7 0 0114 0c0 5.3-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>`;
+const ICON_CAL = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7C2B3A" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>`;
+
+const FASE = { COMP:"Compareceu", REC:"Recusou", NOSHOW:"Confirmou mas não compareceu", AG:"Aguardando confirmação" };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+/* ---------- multi-select com checkboxes (reutilizável nos dois filtros) ----------
+   Estado interno: Set de valores marcados. Set vazio = "Todos" (sem filtro). */
+const _msMenus = [];   // para fechar todos os menus abertos ao abrir um
+
+function createMultiSelect(mount, { allLabel, noun, onChange }){
+  mount.classList.add("ms");
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.className = "ms-btn";
+  const panel = document.createElement("div");
+  panel.className = "ms-panel"; panel.hidden = true;
+  mount.append(btn, panel);
+
+  let options = [];          // [{ value, label }]
+  let selected = new Set();  // vazio = todos
+
+  const allValues = () => options.map(o => o.value);
+  const isAll     = () => selected.size === 0;
+  const effective = () => isAll() ? allValues() : [...selected];
+  const normalize = set => (set.size >= options.length ? new Set() : set);  // marcou tudo = todos
+
+  function summary(){
+    if (isAll()) return allLabel;
+    if (selected.size === 1){
+      const o = options.find(o => o.value === [...selected][0]);
+      return o ? o.label : allLabel;
+    }
+    return selected.size + " " + noun;
+  }
+  function draw(){
+    btn.innerHTML = `<span class="ms-txt">${esc(summary())}</span>`;
+    const all = isAll();
+    panel.innerHTML =
+      `<label class="ms-opt ms-all${all?" on":""}"><input type="checkbox" data-all ${all?"checked":""}><span>${esc(allLabel)}</span></label>` +
+      `<div class="ms-sep"></div>` +
+      options.map((o,i) => {
+        const on = all || selected.has(o.value);
+        return `<label class="ms-opt${on?" on":""}"><input type="checkbox" data-i="${i}" ${on?"checked":""}><span>${esc(o.label)}</span></label>`;
+      }).join("");
+  }
+  function close(){ panel.hidden = true; btn.classList.remove("open"); }
+  function open(){ _msMenus.forEach(c => c()); panel.hidden = false; btn.classList.add("open"); }
+  _msMenus.push(close);
+
+  btn.addEventListener("click", e => { e.stopPropagation(); panel.hidden ? open() : close(); });
+  panel.addEventListener("click", e => e.stopPropagation());
+  panel.addEventListener("change", e => {
+    const t = e.target;
+    if (!t || t.tagName !== "INPUT") return;
+    if (t.hasAttribute("data-all")){
+      selected = new Set();                         // marcar "Todos" limpa o filtro
+    } else {
+      const v = options[+t.getAttribute("data-i")].value;
+      const cur = isAll() ? new Set(allValues()) : new Set(selected);  // sair de "todos" = todos menos este
+      cur.has(v) ? cur.delete(v) : cur.add(v);
+      selected = normalize(cur);
+    }
+    draw();
+    onChange && onChange();
+  });
+  document.addEventListener("click", () => { if (!panel.hidden) close(); });
+
+  return {
+    setOptions(next){                               // mantém as marcações que ainda existem
+      options = next;
+      const valid = new Set(allValues());
+      selected = normalize(new Set([...selected].filter(v => valid.has(v))));
+      draw();
+    },
+    values: effective,   // lista efetiva de valores marcados (todos, se vazio)
+    isAll,
+  };
+}
+
+/* ---------- estado dos filtros ---------- */
+let msEvento, msResp;
+
+const eventOptions = () => DADOS.eventos.map((e,i) => ({ value:String(i), label:e.nome }));
+
+function selectedEventIdx(){
+  return msEvento.values()
+    .map(v => +v)
+    .filter(i => i >= 0 && i < DADOS.eventos.length)
+    .sort((a,b) => a - b);
+}
+function respUnion(indices){
+  const s = new Set();
+  indices.forEach(i => DADOS.eventos[i].deals.forEach(d => s.add(d.r)));
+  return [...s].sort((a,b) => a.localeCompare(b, "pt-BR"));
+}
+function refreshRespOptions(){
+  msResp.setOptions(respUnion(selectedEventIdx()).map(r => ({ value:r, label:r })));
+}
+function rebuildFilters(){
+  msEvento.setOptions(eventOptions());
+  refreshRespOptions();
+}
+
+/* Junta os eventos marcados num único "view" consolidado. */
+function buildView(){
+  const evs = selectedEventIdx().map(i => DADOS.eventos[i]);
+  const total  = evs.reduce((s,e) => s + ((e.custos && e.custos.total) || 0), 0);
+  const itens  = evs.flatMap(e => (e.custos && e.custos.itens) || []);
+  const locais = [...new Set(evs.map(e => e.local).filter(Boolean))];
+  const datas  = [...new Set(evs.map(e => e.data_evento).filter(Boolean))];
+  const atual  = evs.map(e => e.atualizado_em).filter(Boolean).sort().slice(-1)[0] || "";
+  return {
+    evs, multi: evs.length !== 1,
+    deals: evs.flatMap(e => e.deals),
+    custos: { total, itens },
+    nome: evs.length === 1 ? evs[0].nome : `${evs.length} eventos selecionados`,
+    locais, datas, atual,
+  };
+}
+
+function render(){
+  const view = buildView();
+  const C = view.custos;
+  const allDeals = view.deals;
+
+  const respAll  = msResp.isAll();
+  const respSet  = new Set(msResp.values());
+  const filtered = respAll ? allDeals : allDeals.filter(d => respSet.has(d.r));
+  const filtrando = !respAll;
+
+  const cnt = f => filtered.filter(d => d.f === f).length;
+  const base = filtered.length;
+  const compareceu = cnt(FASE.COMP);
+  const recusou    = cnt(FASE.REC);
+  const noshow     = cnt(FASE.NOSHOW);
+  const pending    = cnt(FASE.AG);
+  const confirmados = compareceu + noshow;
+
+  const eventComp = allDeals.filter(d => d.f === FASE.COMP).length;
+  const custoPorParticipante = eventComp ? C.total / eventComp : 0;
+
+  const taxaComp = base ? compareceu / base : 0;
+  const taxaEntreConf = confirmados ? compareceu / confirmados : 0;
+  const taxaRecusa = base ? recusou / base : 0;
+
+  /* masthead + rodapé */
+  document.getElementById("ev-nome").innerHTML =
+    view.multi ? esc(view.nome) : view.nome.replace(/(#\d+)/, '<span class="hl">$1</span>');
+  const localTxt = view.locais.length === 0 ? "—"
+    : view.locais.length <= 2 ? view.locais.join(" · ") : `${view.locais.length} locais`;
+  const dataTxt  = view.datas.length === 0 ? "—"
+    : view.datas.length === 1 ? view.datas[0] : `${view.datas.length} datas`;
+  document.getElementById("ev-meta").innerHTML =
+    `<span class="m">${ICON_PIN} ${esc(localTxt)}</span><span class="dot">·</span>` +
+    `<span class="m">${ICON_CAL} ${esc(dataTxt)}</span>` +
+    (view.multi ? `<span class="dot">·</span><span class="m">${view.evs.length} eventos</span>` : "");
+  document.getElementById("foot-date").textContent = view.atual ? fmtDate(view.atual) : "—";
+  document.getElementById("cost-total").textContent = brl(C.total);
+
+  /* nota do filtro */
+  const nResp = respUnion(selectedEventIdx()).length;
+  const nSel  = msResp.values().length;
+  const escopo = view.multi ? `<b>${view.evs.length}</b> de <b>${DADOS.eventos.length}</b> eventos · ` : "";
+  document.getElementById("f-info").innerHTML = filtrando
+    ? `${escopo}Mostrando <b>${base}</b> convidados de <b>${nSel}</b> ${nSel===1?"responsável":"responsáveis"}. Os custos são do <b>evento inteiro</b>.`
+    : `${escopo}Todos os <b>${base}</b> convidados · <b>${nResp}</b> responsáveis.`;
+
+  /* hero */
+  const hero = [
+    { lbl:"Compareceram", fig:compareceu, sub:`<b>${pct(taxaComp)}</b> da base · ${pct(taxaEntreConf)} dos confirmados` },
+    { lbl:"Recusaram", fig:recusou, sub:`<b>${pct(taxaRecusa)}</b> ${filtrando ? "deste responsável" : "da base convidada"}` },
+    { lbl:"Confirmou mas não compareceu", fig:noshow, sub:`confirmaram presença e faltaram` },
+    { lbl:"Custo por participante", fig:brl0(custoPorParticipante), feature:true, sub:`do evento · ÷ <b>${eventComp}</b> presentes` }
+  ];
+  document.getElementById("hero").innerHTML = hero.map(k => `
+    <div class="kpi${k.feature?' feature':''}">
+      <div class="lbl">${k.lbl}</div><div class="fig">${k.fig}</div><div class="sub">${k.sub}</div>
+    </div>`).join("");
+
+  /* stack */
+  const segs = [
+    { t:"Compareceram", n:compareceu, c:"var(--attend)" },
+    { t:"Recusaram", n:recusou, c:"var(--decline)" },
+    { t:"Confirmaram e faltaram", n:noshow, c:"var(--noshow)" },
+    { t:"Aguardando confirmação", n:pending, c:"var(--pending)" }
+  ];
+  document.getElementById("stack").innerHTML = segs.map(s => {
+    const w = base ? s.n/base*100 : 0;
+    return `<div class="seg" style="flex:${s.n}; background:${s.c}">${w>7?`<span>${s.n}</span>`:""}</div>`;
+  }).join("");
+  document.getElementById("legend").innerHTML = segs.map(s => `
+    <div class="lg"><span class="sw" style="background:${s.c}"></span>
+      <span class="n">${s.n}</span><span class="t">${s.t}</span>
+      <span class="p">${base?pct(s.n/base):"0%"}</span></div>`).join("");
+
+  /* categorias — coluna "Categoria gasto" da planilha */
+  const catMap = {};
+  C.itens.forEach(i => { catMap[i.categoria] = (catMap[i.categoria]||0) + i.total; });
+  const cats = Object.entries(catMap).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const catMax = Math.max(...cats.map(c=>c[1]));
+  document.getElementById("cats").innerHTML = cats.map(([name,v]) => `
+    <div class="cat"><div class="cname">${name}</div>
+      <div class="ctrack"><div class="cfill" style="width:${v/catMax*100}%"></div></div>
+      <div class="cval">${brl(v)}</div></div>`).join("");
+  document.getElementById("cost-body").innerHTML = C.itens.map(i => `
+    <tr><td><span class="it">${i.item}</span>${i.obs?`<span class="ob">${i.obs}</span>`:""}<span class="cattag">${i.categoria}</span></td>
+      <td class="num">${i.qtd}</td><td class="num">${brl(i.unit)}</td>
+      <td class="num ${i.total===0?'z':''}">${brl(i.total)}</td>
+      <td><span class="pill ${i.status.toLowerCase()}">${i.status}</span></td></tr>`).join("");
+
+  /* recusas — filtradas */
+  const comMotivo = filtered.filter(d => d.f === FASE.REC && d.mot && d.mot.trim());
+  const reasonsEl = document.getElementById("reasons");
+  const noteEl = document.getElementById("reasons-note");
+  const insightEl = document.getElementById("insight");
+  if (recusou === 0){
+    reasonsEl.innerHTML = `<div class="empty">Nenhuma recusa neste filtro. 🎉</div>`;
+    noteEl.innerHTML = ""; insightEl.style.display = "none";
+  } else if (comMotivo.length === 0){
+    reasonsEl.innerHTML = `<div class="empty">Nenhum motivo de recusa registrado no HubSpot para este filtro.</div>`;
+    noteEl.innerHTML = `<b>${recusou}</b> recusas — nenhuma com motivo anotado.`;
+    insightEl.style.display = "none";
+  } else {
+    reasonsEl.innerHTML = comMotivo.map(d => `
+      <div class="reason">
+        <div class="rtext">${d.mot.trim()}</div>
+        <div class="rwho">${d.n}<span class="sep">·</span><span class="brand">${d.m}</span></div>
+      </div>`).join("");
+    noteEl.innerHTML = `Motivo registrado em <b>${comMotivo.length}</b> das <b>${recusou}</b> recusas · <b>${recusou-comMotivo.length}</b> sem motivo anotado no HubSpot.`;
+    if (!filtrando){
+      insightEl.style.display = "";
+      insightEl.innerHTML = `<b>Leitura:</b> entre os motivos registrados, a grande maioria é <b>viagem / estar fora de São Paulo</b> na data — um sinal de que <b>a data</b> (e não o convite em si) foi o principal obstáculo à presença.`;
+    } else {
+      insightEl.style.display = "none";
+    }
+  }
+
+  /* confirmaram mas não compareceram — filtrado */
+  const noshowDeals = filtered.filter(d => d.f === FASE.NOSHOW);
+  const nsEl = document.getElementById("noshow-list");
+  const nsNote = document.getElementById("noshow-note");
+  if (noshowDeals.length === 0){
+    nsEl.innerHTML = `<div class="empty">Ninguém confirmou presença e faltou neste filtro. 🎯</div>`;
+    nsNote.innerHTML = "";
+  } else {
+    nsEl.innerHTML = noshowDeals.map(d => `
+      <div class="ns-item"><div class="nm">${d.n}</div><div class="br">${d.m}</div></div>`).join("");
+    nsNote.innerHTML = `<b>${noshowDeals.length}</b> ${noshowDeals.length===1?"pessoa confirmou":"pessoas confirmaram"} presença e não compareceu${noshowDeals.length===1?"":"ram"} ao evento.`;
+  }
+}
+
+function init(){
+  msEvento = createMultiSelect(document.getElementById("ms-evento"), {
+    allLabel: "Todos os eventos", noun: "eventos",
+    onChange: () => { refreshRespOptions(); render(); },   // trocar evento reajusta a lista de responsáveis
+  });
+  msResp = createMultiSelect(document.getElementById("ms-resp"), {
+    allLabel: "Todos os responsáveis", noun: "responsáveis",
+    onChange: render,
+  });
+  rebuildFilters();
+  render();
+}
+
+/* ---------- botão Atualizar (dados ao vivo via servidor local) ---------- */
+const btnRefresh = document.getElementById("btn-refresh");
+const refreshStatus = document.getElementById("refresh-status");
+
+async function atualizar(silencioso){
+  btnRefresh.classList.add("loading");
+  btnRefresh.disabled = true;
+  if (!silencioso) refreshStatus.textContent = "Atualizando…";
+  try {
+    const res = await fetch("/api/dados", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (!data || !Array.isArray(data.eventos) || !data.eventos.length) throw new Error("resposta sem eventos");
+    DADOS = data;
+    rebuildFilters();   // recria as opções preservando o que já estava marcado
+    render();
+    const hora = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    refreshStatus.textContent = "✓ Atualizado às " + hora;
+  } catch (e) {
+    refreshStatus.textContent = silencioso ? "" : "Sem servidor ao vivo — usando dados salvos";
+  } finally {
+    btnRefresh.classList.remove("loading");
+    btnRefresh.disabled = false;
+  }
+}
+btnRefresh.addEventListener("click", () => atualizar(false));
+
+init();
+/* No site publicado (GitHub Pages) não há servidor local: esconde o botão Atualizar e
+   usa os dados embutidos. Rodando local (localhost) mantém o botão e busca dados ao vivo. */
+const IS_LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
+if (IS_LOCAL) atualizar(true);
+else document.querySelector(".filters-actions").style.display = "none";
+</script>
+</body>
+</html>

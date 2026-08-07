@@ -1,0 +1,582 @@
+{
+  "eventos": [
+    {
+      "nome": "Sintonia: Criação e Vendas #001",
+      "local": "Rubaiyat - Faria Lima",
+      "data_evento": "30/07/2026",
+      "atualizado_em": "2026-08-07",
+      "custos": {
+        "total": 21913.16,
+        "itens": [
+          {
+            "item": "Aluguel do espaço (Sala Colômbia + VIP Rubaiyat)",
+            "obs": "Conseguimos a insenção do valor de locação",
+            "qtd": 2,
+            "unit": 2000.0,
+            "total": 0.0,
+            "status": "ISENTO",
+            "categoria": "Espaço"
+          },
+          {
+            "item": "Menu por convidado",
+            "obs": "Cotação de menu fechado para 45 convidados.",
+            "qtd": 45,
+            "unit": 270.75,
+            "total": 12183.75,
+            "status": "PAGO",
+            "categoria": "Alimentação"
+          },
+          {
+            "item": "Gorjeta App",
+            "obs": "",
+            "qtd": 1,
+            "unit": 1956.25,
+            "total": 1956.25,
+            "status": "PAGO",
+            "categoria": "Taxa Garçom"
+          },
+          {
+            "item": "Bebidas (vinho)",
+            "obs": "Consumimos o vinho do estabelecimento",
+            "qtd": 17,
+            "unit": 180.0,
+            "total": 3060.0,
+            "status": "PAGO",
+            "categoria": "Bebidas"
+          },
+          {
+            "item": "Estacionamento",
+            "obs": "Absorvemos o pagamento do estacionamento de todos que vieram de carro",
+            "qtd": 20,
+            "unit": 40.0,
+            "total": 800.0,
+            "status": "PAGO",
+            "categoria": "Estacionamento"
+          },
+          {
+            "item": "Audiovisual extra (TV, passador de slide, microfone, estrutura)",
+            "obs": "Cotar: TV, passador, microfone",
+            "qtd": 1,
+            "unit": 1500.0,
+            "total": 1500.0,
+            "status": "PAGO",
+            "categoria": "Audiovisual"
+          },
+          {
+            "item": "Menu impresso",
+            "obs": "Fizemos a impressão com o Marco",
+            "qtd": 45,
+            "unit": 5.0,
+            "total": 225.0,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Place cards impressos",
+            "obs": "Fizemos a impressão com o Marco",
+            "qtd": 45,
+            "unit": 7.35,
+            "total": 330.75,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Rolo etiquetas identificação",
+            "obs": "Etiqueta simples, adicionaremos o nome escrito a mão para identidicar os convidados",
+            "qtd": 1,
+            "unit": 28.81,
+            "total": 28.81,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          },
+          {
+            "item": "Brinde (LIVRO)",
+            "obs": "Escolhemos o livro: A moda imita a vida",
+            "qtd": 20,
+            "unit": 51.09,
+            "total": 1021.8,
+            "status": "PAGO",
+            "categoria": "Brindes"
+          },
+          {
+            "item": "Etiquetadora",
+            "obs": "Adiquirimos a etiquetadora para facilitar a dinamica de todos os eventos",
+            "qtd": 1,
+            "unit": 778.0,
+            "total": 778.0,
+            "status": "PAGO",
+            "categoria": "Equipamentos"
+          },
+          {
+            "item": "Envelopes",
+            "obs": "Entregamos acessos do Tino no envelope",
+            "qtd": 1,
+            "unit": 28.8,
+            "total": 28.8,
+            "status": "PAGO",
+            "categoria": "Impressões e Papelaria"
+          }
+        ]
+      },
+      "deals": [
+        {
+          "n": "Manuela",
+          "m": "Alcance Jeans",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Ara",
+          "m": "Skenn",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Cynthia Agopyan",
+          "m": "Skenn",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Cesar Bertini",
+          "m": "Vesti",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Luis Guilherme",
+          "m": "Ana Gonçalves",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estará no Chile"
+        },
+        {
+          "n": "Vitor",
+          "m": "Shanes",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Priscila",
+          "m": "Lovlity",
+          "f": "Confirmou mas não compareceu",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "David Silva",
+          "m": "Lovlity",
+          "f": "Confirmou mas não compareceu",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Felipe",
+          "m": "P.A Concept",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Renato",
+          "m": "Revanche",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Raquel",
+          "m": "Mamo",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Gilad",
+          "m": "Crocker",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Junior",
+          "m": "Tricomix",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Fabiana Carmona",
+          "m": "Tricomix",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Chung",
+          "m": "Manacá",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Hadi",
+          "m": "Consciência",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro",
+          "mot": "Estará fora, de férias."
+        },
+        {
+          "n": "Rafael",
+          "m": "Black Jeans",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Michael Prado",
+          "m": "Stefani",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Adela Olga Prado castro",
+          "m": "Stefani",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Dedier",
+          "m": "Villon Jeans",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Fica em Rio Preto e não estará em SP"
+        },
+        {
+          "n": "Pedro",
+          "m": "Pedro",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Lais",
+          "m": "Gitaa",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estará em viagem nessa data"
+        },
+        {
+          "n": "Fabio",
+          "m": "Groovy Forever",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Jessica Chung",
+          "m": "Groovy Forever",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Rodrigo",
+          "m": "Artecor",
+          "f": "Confirmou mas não compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Leila ",
+          "m": "Le Ricard",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Tellos",
+          "m": "Anemone",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Disse somente que não vai poder ir"
+        },
+        {
+          "n": "German Kim",
+          "m": "La Chocole",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Angela",
+          "m": "Planet Girls",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "André",
+          "m": "Aline mezzari",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Carol",
+          "m": "Karmani",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Karla",
+          "m": "Donna Ritz",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Verusca Tomioka",
+          "m": "Donna Ritz",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Abraham Hwang",
+          "m": "Nanaminze",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Carlos",
+          "m": "Santa Prata",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "David Lee",
+          "m": "Innocence",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Bruno Lee",
+          "m": "Pury",
+          "f": "Recusou",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "David Kang",
+          "m": "Adama",
+          "f": "Confirmou mas não compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Patricia",
+          "m": "Karmani",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Vitor",
+          "m": "Maite Miyao ",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Dany Tahan",
+          "m": "Optimist Jeans ",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Marcelo",
+          "m": "Charisma",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Victor",
+          "m": "Surfável",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Luiza",
+          "m": "Karmani",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Hyun",
+          "m": "AttaSoft",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Wagner",
+          "m": "AttaSoft",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Marcelo Kuperchmit",
+          "m": "Figo",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Marcelo Pereira",
+          "m": "Figo",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Ademir",
+          "m": "Darlook",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Kaique",
+          "m": "Darlook",
+          "f": "Recusou",
+          "r": "Cristiane Canatelli"
+        },
+        {
+          "n": "Daniel Haut",
+          "m": "Benesh",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Rafaela",
+          "m": "Aurore Clothing",
+          "f": "Recusou",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Guilherme Rosas",
+          "m": "Agencia Glads",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Leonardo Pessutti",
+          "m": "Agencia Glads",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Josep",
+          "m": "Incentive",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Camila Kim",
+          "m": "Incentive",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Rodrigo",
+          "m": "Coqueta",
+          "f": "Recusou",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Hugo",
+          "m": "Doce Deleite",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Diana Choi Jung",
+          "m": "Doce Deleite",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "5511971528866",
+          "m": "Conceito Mika",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Lorena",
+          "m": "Conceito Mika",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Luciana de Paula",
+          "m": "Nova Versão Roupas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Danilo Barboza Tieghi",
+          "m": "Nova Versão Roupas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Mariana",
+          "m": "Equivoco",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Eduardo Campello",
+          "m": "Equivoco",
+          "f": "Compareceu",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Dione",
+          "m": "Danque",
+          "f": "Recusou",
+          "r": "Gabriella Busto"
+        },
+        {
+          "n": "Fran Kang",
+          "m": "Lesto",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Luis Seo",
+          "m": "Lesto",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Daniela",
+          "m": "MonClos",
+          "f": "Compareceu",
+          "r": "Thamiris Ribeiro"
+        },
+        {
+          "n": "Marcelo Kim",
+          "m": "Winnie Modas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Elisabete Yoo",
+          "m": "Winnie Modas",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Samuel",
+          "m": "Kayla",
+          "f": "Compareceu",
+          "r": "Maria Fernanda Araujo"
+        },
+        {
+          "n": "Luana Dantas",
+          "m": "Artecor",
+          "f": "Confirmou mas não compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Felpe",
+          "m": "Nanaminze",
+          "f": "Compareceu",
+          "r": "Luana Coutinho"
+        },
+        {
+          "n": "Felipe",
+          "m": "Jay Jones",
+          "f": "Recusou",
+          "r": "Gabriella Busto",
+          "mot": "Estara viajando"
+        }
+      ]
+    }
+  ],
+  "gerado_em": "07/08/2026 12:41"
+}

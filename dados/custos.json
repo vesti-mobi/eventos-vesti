@@ -1,0 +1,21 @@
+{
+  "_comentario": "Custos por evento (fonte local privada). Enquanto o Google não estiver plugado, o servidor usa este arquivo. Chave = nome do evento (idêntico ao nome_evento no HubSpot). Quando quiser atualizar, é só pedir ao Claude (ele lê sua planilha de forma privada) ou editar aqui.",
+  "Sintonia: Criação e Vendas #001": {
+    "local": "Rubaiyat - Faria Lima",
+    "data": "30/07/2026",
+    "itens": [
+      { "item": "Aluguel do espaço (Sala Colômbia + VIP Rubaiyat)", "obs": "Conseguimos a isenção do valor de locação", "qtd": 2, "unit": 2000.00, "total": 0.00, "status": "ISENTO", "categoria": "Espaço" },
+      { "item": "Menu por convidado", "obs": "Cotação de menu fechado para 45 convidados", "qtd": 45, "unit": 270.75, "total": 12183.75, "status": "PAGO", "categoria": "Alimentação" },
+      { "item": "Gorjeta App", "obs": "", "qtd": 1, "unit": 1956.25, "total": 1956.25, "status": "PAGO", "categoria": "Taxa Garçom" },
+      { "item": "Bebidas (vinho)", "obs": "Consumimos o vinho do estabelecimento", "qtd": 17, "unit": 180.00, "total": 3060.00, "status": "PAGO", "categoria": "Bebidas" },
+      { "item": "Estacionamento", "obs": "Absorvemos o estacionamento de todos que vieram de carro", "qtd": 20, "unit": 40.00, "total": 800.00, "status": "PAGO", "categoria": "Estacionamento" },
+      { "item": "Audiovisual extra (TV, passador, microfone)", "obs": "", "qtd": 1, "unit": 1500.00, "total": 1500.00, "status": "PAGO", "categoria": "Audiovisual" },
+      { "item": "Menu impresso", "obs": "Impressão com o Marco", "qtd": 45, "unit": 5.00, "total": 225.00, "status": "PAGO", "categoria": "Impressões e Papelaria" },
+      { "item": "Place cards impressos", "obs": "Impressão com o Marco", "qtd": 45, "unit": 7.35, "total": 330.75, "status": "PAGO", "categoria": "Impressões e Papelaria" },
+      { "item": "Rolo etiquetas identificação", "obs": "Nome escrito à mão nos convidados", "qtd": 1, "unit": 28.81, "total": 28.81, "status": "PAGO", "categoria": "Impressões e Papelaria" },
+      { "item": "Brinde — Livro \"A Moda Imita a Vida\"", "obs": "André Carvalhal", "qtd": 20, "unit": 51.09, "total": 1021.80, "status": "PAGO", "categoria": "Brindes" },
+      { "item": "Etiquetadora", "obs": "Ativo reutilizável nos próximos eventos", "qtd": 1, "unit": 778.00, "total": 778.00, "status": "PAGO", "categoria": "Equipamentos" },
+      { "item": "Envelopes", "obs": "Entregamos acessos do Tino no envelope", "qtd": 1, "unit": 28.80, "total": 28.80, "status": "PAGO", "categoria": "Impressões e Papelaria" }
+    ]
+  }
+}
