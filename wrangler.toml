@@ -1,0 +1,5 @@
+# Configuração da Cloudflare Pages (Functions).
+# O site estático é a raiz do projeto; as funções ficam em functions/api/*.
+name = "eventos-vesti"
+compatibility_date = "2024-11-06"
+pages_build_output_dir = "."

@@ -855,7 +855,7 @@ async function atualizar(silencioso){
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     if (!data || !Array.isArray(data.respostas)) throw new Error("resposta inválida");
-    SAT = { ...SAT, respostas: data.respostas };   // mantém o mapa de eventos/datas do snapshot
+    SAT = { ...SAT, respostas: data.respostas, gerado_em: data.gerado_em || SAT.gerado_em };   // mantém o mapa de eventos/datas
     rebuildFilter();
     render();
     const hora = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -874,10 +874,8 @@ msEvento = createMultiSelect(document.getElementById("ms-evento"), {
 });
 rebuildFilter();
 render();
-/* No site publicado (GitHub Pages) não há servidor local: esconde o botão Atualizar. */
-const IS_LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
-if (IS_LOCAL) atualizar(true);
-else document.querySelector(".topbar-actions").style.display = "none";
+/* Busca respostas ao vivo pela API (/api/satisfacao na Cloudflare). Sem API, usa o snapshot. */
+atualizar(true);
 </script>
 </body>
 </html>

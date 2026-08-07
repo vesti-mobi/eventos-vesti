@@ -1194,11 +1194,9 @@ async function atualizar(silencioso){
 btnRefresh.addEventListener("click", () => atualizar(false));
 
 init();
-/* No site publicado (GitHub Pages) não há servidor local: esconde o botão Atualizar e
-   usa os dados embutidos. Rodando local (localhost) mantém o botão e busca dados ao vivo. */
-const IS_LOCAL = ["localhost", "127.0.0.1", ""].includes(location.hostname);
-if (IS_LOCAL) atualizar(true);
-else document.querySelector(".filters-actions").style.display = "none";
+/* Busca dados ao vivo pela API (/api/dados na Cloudflare). Sem API (arquivo offline
+   ou espelho estático), cai no snapshot embutido silenciosamente. */
+atualizar(true);
 </script>
 </body>
 </html>

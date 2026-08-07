@@ -11,6 +11,11 @@ google-service-account.json
 # Python
 __pycache__/
 
+# Node / Cloudflare (Functions) — dependências e chaves de teste local
+node_modules/
+.wrangler/
+.dev.vars
+
 # SO
 Thumbs.db
 .DS_Store
