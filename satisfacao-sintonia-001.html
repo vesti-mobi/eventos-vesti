@@ -858,7 +858,7 @@ async function atualizar(silencioso){
   btnRefresh.disabled = true;
   if (!silencioso) refreshStatus.textContent = "Atualizando…";
   try {
-    const res = await fetch(API_BASE + "/api/satisfacao", { cache: "no-store" });
+    const res = await fetch(API_BASE + "/api/satisfacao" + (silencioso ? "" : "?fresh=1"), { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     if (!data || !Array.isArray(data.respostas)) throw new Error("resposta inválida");
