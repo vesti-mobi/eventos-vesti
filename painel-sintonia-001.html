@@ -1131,12 +1131,7 @@ function render(){
         <div class="rwho">${d.n}<span class="sep">·</span><span class="brand">${d.m}</span></div>
       </div>`).join("");
     noteEl.innerHTML = `Motivo registrado em <b>${comMotivo.length}</b> das <b>${recusou}</b> recusas · <b>${recusou-comMotivo.length}</b> sem motivo anotado no HubSpot.`;
-    if (!filtrando){
-      insightEl.style.display = "";
-      insightEl.innerHTML = `<b>Leitura:</b> entre os motivos registrados, a grande maioria é <b>viagem / estar fora de São Paulo</b> na data — um sinal de que <b>a data</b> (e não o convite em si) foi o principal obstáculo à presença.`;
-    } else {
-      insightEl.style.display = "none";
-    }
+    insightEl.style.display = "none";
   }
 
   /* confirmaram mas não compareceram — filtrado */
