@@ -979,11 +979,12 @@ function buildView(){
   const total  = evs.reduce((s,e) => s + ((e.custos && e.custos.total) || 0), 0);
   const itens  = evs.flatMap(e => (e.custos && e.custos.itens) || []);
   const deals  = evs.flatMap(e => e.deals || []);
+  const funcionarios = evs.flatMap(e => e.funcionarios || []);
   const locais = [...new Set(evs.map(e => e.local).filter(Boolean))];
   const datas  = [...new Set(evs.map(e => e.data_evento).filter(Boolean))];
   const atual  = evs.map(e => e.atualizado_em).filter(Boolean).sort().slice(-1)[0] || "";
   return {
-    evs, multi: evs.length !== 1, total, itens, deals,
+    evs, multi: evs.length !== 1, total, itens, deals, funcionarios,
     nome: evs.length === 1 ? evs[0].nome : `${evs.length} eventos selecionados`,
     locais, datas, atual,
   };
@@ -994,7 +995,9 @@ function render(){
   const itens = view.itens;
   const total = view.total;
   const presentes = view.deals.filter(d => d.f === FASE.COMP).length;
-  const custoPart = presentes ? total / presentes : 0;
+  const nFunc = view.funcionarios.length;
+  const heads = presentes + nFunc;
+  const custoPart = heads ? total / heads : 0;
   const nCat = new Set(itens.map(i => i.categoria)).size;
 
   /* masthead + rodapé */
@@ -1018,7 +1021,7 @@ function render(){
   /* hero */
   const hero = [
     { lbl:"Investimento total", fig:brl0(total), feature:true, sub:`<b>${itens.length}</b> ${itens.length===1?"item lançado":"itens lançados"}` },
-    { lbl:"Custo por participante", fig:brl0(custoPart), sub:`÷ <b>${presentes}</b> ${presentes===1?"presente":"presentes"}` },
+    { lbl:"Custo por participante", fig:brl0(custoPart), sub:`÷ <b>${heads}</b> presentes (${presentes} convid. + ${nFunc} func.)` },
     { lbl:"Itens lançados", fig:itens.length, sub:`na planilha de custos` },
     { lbl:"Categorias de gasto", fig:nCat, sub:`tipos diferentes` }
   ];

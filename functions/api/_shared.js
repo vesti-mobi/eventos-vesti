@@ -273,6 +273,27 @@ async function fetchSheetCosts(token, sheetId) {
   return {};
 }
 
+// Aba "Funcionários participantes" (colunas Name + event_name): funcionários da Vesti por evento.
+async function fetchSheetFuncionarios(token, sheetId) {
+  const title = (await sheetTitles(token, sheetId)).find((t) => /funcion/i.test(t));
+  if (!title) return {};
+  const rows = (await sheetValues(token, sheetId, title)).map((r) => r.map((c) => String(c == null ? "" : c)));
+  if (rows.length < 2) return {};
+  const header = rows[0].map((c) => c.trim().toLowerCase());
+  let ni = header.findIndex((h) => h === "name" || h === "nome");
+  let ei = header.findIndex((h) => h === "event_name" || h.includes("evento"));
+  if (ni < 0) ni = 0;
+  if (ei < 0) ei = 1;
+  const out = {};
+  for (const row of rows.slice(1)) {
+    const nome = (row[ni] || "").trim();
+    const ev = (row[ei] || "").trim();
+    if (!nome || !ev) continue;
+    (out[ev] = out[ev] || []).push(nome);
+  }
+  return out;
+}
+
 /* ------------------------- montagem final ------------------------- */
 export async function buildDados(env) {
   const token = env.HUBSPOT_TOKEN;
@@ -282,13 +303,15 @@ export async function buildDados(env) {
   const [stageMap, owners, deals] = [await fetchStageMap(token, pipelineId), await fetchOwners(token), await fetchDeals(token, pipelineId)];
 
   let costs = {};
+  let funcs = {};
   if (env.GOOGLE_SERVICE_ACCOUNT && env.SHEET_ID) {
     try {
       const gtoken = await getGoogleToken(env.GOOGLE_SERVICE_ACCOUNT);
       costs = await fetchSheetCosts(gtoken, env.SHEET_ID);
+      funcs = await fetchSheetFuncionarios(gtoken, env.SHEET_ID);
     } catch (e) {
-      // se a planilha falhar, segue sem custos (não derruba a presença)
-      console.log("aviso: falha ao ler a planilha de custos:", e.message);
+      // se a planilha falhar, segue sem custos/funcionários (não derruba a presença)
+      console.log("aviso: falha ao ler a planilha:", e.message);
     }
   }
 
@@ -311,7 +334,7 @@ export async function buildDados(env) {
   }
 
   const hoje = isoDateBRT();
-  const nomes = new Set([...Object.keys(porEvento), ...Object.keys(costs)]);
+  const nomes = new Set([...Object.keys(porEvento), ...Object.keys(costs), ...Object.keys(funcs)]);
   const eventos = [];
   for (const nome of nomes) {
     const c = costs[nome] || {};
@@ -324,6 +347,7 @@ export async function buildDados(env) {
       atualizado_em: hoje,
       custos: { total, itens },
       deals: porEvento[nome] || [],
+      funcionarios: funcs[nome] || [],
     });
   }
   eventos.sort((a, b) => b.deals.length - a.deals.length);

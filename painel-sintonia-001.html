@@ -24,6 +24,8 @@
     --decline:    #8A3140;
     --noshow:     #B4863C;
     --pending:    #B1A38E;
+    --invited:    #8A96A2;
+    --confirmed:  #6E8A78;
 
     --shadow: 0 1px 2px rgba(28,25,22,.04), 0 12px 40px -18px rgba(28,25,22,.22);
     --maxw: 1500px;
@@ -152,7 +154,7 @@
   .stack { display: flex; height: 46px; border-radius: 3px; overflow: hidden; margin-bottom: 20px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06); }
   .stack .seg { position: relative; transition: flex .5s cubic-bezier(.2,.7,.2,1); min-width: 0; }
   .stack .seg span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 28px; }
+  .legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 28px; }
   @media (max-width: 720px){ .legend { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 420px){ .legend { grid-template-columns: 1fr; } }
   .legend .lg { display: flex; align-items: baseline; gap: 10px; font-size: 13px; }
@@ -235,6 +237,9 @@
   .comp .cmeta { margin-top: 8px; font-family: "Archivo", sans-serif; font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
   .comp .cmeta .stg { color: var(--wine); }
 
+  .funcs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .func { background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 13px; color: var(--ink); }
+
   footer { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-faint); }
   footer b { color: var(--ink-soft); font-weight: 600; }
 </style>
@@ -303,6 +308,14 @@
     <div class="panel">
       <div class="comps" id="comps"></div>
       <div class="reasons-note" id="comps-note"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Funcionários participantes</h2><span class="idx">05 — Vesti</span></div>
+    <div class="panel">
+      <div class="funcs" id="funcs"></div>
+      <div class="reasons-note" id="funcs-note"></div>
     </div>
   </section>
 
@@ -911,7 +924,7 @@ const fmtDate = iso => { const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; 
 const ICON_PIN = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7C2B3A" stroke-width="2"><path d="M12 21s-7-6.7-7-12a7 7 0 0114 0c0 5.3-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>`;
 const ICON_CAL = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7C2B3A" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>`;
 
-const FASE = { COMP:"Compareceu", REC:"Recusou", NOSHOW:"Confirmou mas não compareceu", AG:"Aguardando confirmação" };
+const FASE = { COMP:"Compareceu", REC:"Recusou", NOSHOW:"Confirmou mas não compareceu", AG:"Aguardando confirmação", CONV:"Convidado", CONF:"Confirmou" };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 
 /* ---------- multi-select com checkboxes (reutilizável nos dois filtros) ----------
@@ -1022,6 +1035,7 @@ function buildView(){
   return {
     evs, multi: evs.length !== 1,
     deals: evs.flatMap(e => e.deals),
+    funcionarios: evs.flatMap(e => e.funcionarios || []),
     custos: { total, itens },
     nome: evs.length === 1 ? evs[0].nome : `${evs.length} eventos selecionados`,
     locais, datas, atual,
@@ -1043,6 +1057,10 @@ function render(){
   const recusou    = cnt(FASE.REC);
   const noshow     = cnt(FASE.NOSHOW);
   const pending    = cnt(FASE.AG);
+  const convidado  = cnt(FASE.CONV);
+  const confirmou  = cnt(FASE.CONF);
+  const nFunc      = view.funcionarios.length;
+  const totalEvento = compareceu + nFunc;
   const confirmados = compareceu + noshow;
 
   const taxaComp = base ? compareceu / base : 0;
@@ -1072,10 +1090,14 @@ function render(){
 
   /* hero */
   const hero = [
+    { lbl:"Convidado", fig:convidado, sub:`ainda na etapa de convite` },
+    { lbl:"Aguardando confirmação", fig:pending, sub:`ainda não responderam ao convite` },
+    { lbl:"Confirmou", fig:confirmou, sub:`confirmaram que viriam` },
     { lbl:"Compareceram", fig:compareceu, feature:true, sub:`<b>${pct(taxaComp)}</b> da base · ${pct(taxaEntreConf)} dos confirmados` },
     { lbl:"Recusaram", fig:recusou, sub:`<b>${pct(taxaRecusa)}</b> ${filtrando ? "deste responsável" : "da base convidada"}` },
     { lbl:"Confirmou mas não compareceu", fig:noshow, sub:`confirmaram presença e faltaram` },
-    { lbl:"Aguardando confirmação", fig:pending, sub:`ainda não responderam ao convite` }
+    { lbl:"Funcionários da Vesti", fig:nFunc, sub:`participaram do evento` },
+    { lbl:"Total no evento", fig:totalEvento, sub:`<b>${compareceu}</b> convidados + <b>${nFunc}</b> funcionários` }
   ];
   document.getElementById("hero").innerHTML = hero.map(k => `
     <div class="kpi${k.feature?' feature':''}">
@@ -1085,9 +1107,11 @@ function render(){
   /* stack */
   const segs = [
     { t:"Compareceram", n:compareceu, c:"var(--attend)" },
-    { t:"Recusaram", n:recusou, c:"var(--decline)" },
+    { t:"Confirmou", n:confirmou, c:"var(--confirmed)" },
+    { t:"Aguardando confirmação", n:pending, c:"var(--pending)" },
+    { t:"Convidado", n:convidado, c:"var(--invited)" },
     { t:"Confirmaram e faltaram", n:noshow, c:"var(--noshow)" },
-    { t:"Aguardando confirmação", n:pending, c:"var(--pending)" }
+    { t:"Recusaram", n:recusou, c:"var(--decline)" }
   ];
   document.getElementById("stack").innerHTML = segs.map(s => {
     const w = base ? s.n/base*100 : 0;
@@ -1148,6 +1172,18 @@ function render(){
         <div class="cmeta">${d.m} · <span class="stg">${d.f}</span> · convidou: ${d.r}</div>
       </div>`).join("");
     compsNote.innerHTML = `<b>${comps.length}</b> ${comps.length===1?"acompanhante":"acompanhantes"} neste filtro.`;
+  }
+
+  /* funcionários da Vesti que participaram (da planilha; não filtra por responsável) */
+  const funcs = view.funcionarios;
+  const funcsEl = document.getElementById("funcs");
+  const funcsNote = document.getElementById("funcs-note");
+  if (funcs.length === 0){
+    funcsEl.innerHTML = `<div class="empty">Nenhum funcionário anotado para este evento.</div>`;
+    funcsNote.innerHTML = "";
+  } else {
+    funcsEl.innerHTML = funcs.map(n => `<span class="func">${esc(n)}</span>`).join("");
+    funcsNote.innerHTML = `<b>${funcs.length}</b> ${funcs.length===1?"funcionário participou":"funcionários participaram"} do evento (não entram na contagem de convidados).`;
   }
 }
 
