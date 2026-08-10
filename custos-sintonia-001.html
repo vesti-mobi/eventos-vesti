@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sintonia: Criação e Vendas #001 · Relatório de Resultados</title>
+<title>Sintonia: Criação e Vendas #001 · Custos do evento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -65,7 +65,7 @@
   .meta-row .dot { color: var(--ink-faint); }
 
   /* ---------- Barra superior (botão satisfação) ---------- */
-  .pagebar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-bottom: 10px; }
+  .pagebar { display: flex; justify-content: flex-end; margin-bottom: 10px; }
   .btn-sat { display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo", sans-serif;
     font-size: 12.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--wine);
     text-decoration: none; background: var(--paper); border: 1px solid var(--wine); border-radius: 3px;
@@ -234,12 +234,12 @@
 <div class="wrap">
 
   <div class="pagebar">
-    <a class="btn-sat" href="custos-sintonia-001.html"><span class="ic">💰</span> Gastos do evento</a>
-    <a class="btn-sat" href="satisfacao-sintonia-001.html" target="_blank" rel="noopener"><span class="ic">☆</span> Formulário de satisfação</a>
+    <a class="btn-sat" href="painel-sintonia-001.html"><span class="ic">←</span> Painel de presença</a>
+    <a class="btn-sat" href="satisfacao-sintonia-001.html" target="_blank" rel="noopener"><span class="ic">☆</span> Satisfação</a>
   </div>
 
   <header class="masthead">
-    <div class="kicker">Relatório de Resultados · Evento Presencial</div>
+    <div class="kicker">Relatório de Custos · Evento Presencial</div>
     <h1 id="ev-nome"></h1>
     <div class="meta-row" id="ev-meta"></div>
   </header>
@@ -250,13 +250,9 @@
       <label>Evento</label>
       <div id="ms-evento"></div>
     </div>
-    <div class="filter">
-      <label>Responsável (quem convidou)</label>
-      <div id="ms-resp"></div>
-    </div>
     <div class="filters-actions">
       <span class="refresh-status" id="refresh-status"></span>
-      <button class="btn-refresh" id="btn-refresh" title="Puxar dados do HubSpot e da planilha agora"><span class="ic">⟳</span> Atualizar</button>
+      <button class="btn-refresh" id="btn-refresh" title="Puxar os custos da planilha agora"><span class="ic">⟳</span> Atualizar</button>
     </div>
     <div class="filter-info" id="f-info"></div>
   </div>
@@ -264,33 +260,25 @@
   <div class="hero" id="hero"></div>
 
   <section>
-    <div class="sec-head"><h2>Presença dos convidados</h2><span class="idx">01 — HubSpot</span></div>
+    <div class="sec-head"><h2>Gastos por categoria</h2><span class="idx">01 — Planilha</span></div>
     <div class="panel">
-      <h3>Distribuição da base convidada</h3>
-      <div class="stack" id="stack"></div>
-      <div class="legend" id="legend"></div>
+      <div class="cats" id="cats"></div>
     </div>
   </section>
 
   <section>
-    <div class="sec-head"><h2>Por que recusaram</h2><span class="idx">02 — Recusas</span></div>
+    <div class="sec-head"><h2>Itens lançados</h2><span class="idx">02 — Detalhe</span></div>
     <div class="panel">
-      <div class="reasons" id="reasons"></div>
-      <div class="reasons-note" id="reasons-note"></div>
-      <div class="insight" id="insight"></div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head"><h2>Confirmaram mas não compareceram</h2><span class="idx">03 — No-show</span></div>
-    <div class="panel">
-      <div class="noshow-list" id="noshow-list"></div>
-      <div class="reasons-note" id="noshow-note"></div>
+      <table>
+        <thead><tr><th>Item</th><th class="num">Qtd</th><th class="num">Custo unit.</th><th class="num">Total</th><th>Status</th></tr></thead>
+        <tbody id="cost-body"></tbody>
+        <tfoot><tr><td colspan="3">Total investido</td><td class="num" id="cost-total"></td><td></td></tr></tfoot>
+      </table>
     </div>
   </section>
 
   <footer>
-    <span>Fonte: HubSpot · pipeline <b>Eventos Presenciais</b> (chave <b>nome_evento</b>, responsável = proprietário do deal).</span>
+    <span>Fonte: Planilha de custos no Google Sheets · presença via HubSpot (para o custo por participante).</span>
     <span>Dados atualizados em <b id="foot-date"></b>.</span>
   </footer>
 
@@ -970,8 +958,8 @@ function createMultiSelect(mount, { allLabel, noun, onChange }){
   };
 }
 
-/* ---------- estado dos filtros ---------- */
-let msEvento, msResp;
+/* ---------- estado do filtro (só evento) ---------- */
+let msEvento;
 
 const eventOptions = () => DADOS.eventos.map((e,i) => ({ value:String(i), label:e.nome }));
 
@@ -981,31 +969,21 @@ function selectedEventIdx(){
     .filter(i => i >= 0 && i < DADOS.eventos.length)
     .sort((a,b) => a - b);
 }
-function respUnion(indices){
-  const s = new Set();
-  indices.forEach(i => DADOS.eventos[i].deals.forEach(d => s.add(d.r)));
-  return [...s].sort((a,b) => a.localeCompare(b, "pt-BR"));
-}
-function refreshRespOptions(){
-  msResp.setOptions(respUnion(selectedEventIdx()).map(r => ({ value:r, label:r })));
-}
 function rebuildFilters(){
   msEvento.setOptions(eventOptions());
-  refreshRespOptions();
 }
 
-/* Junta os eventos marcados num único "view" consolidado. */
+/* Junta os eventos marcados num único "view" consolidado (custos + presentes). */
 function buildView(){
   const evs = selectedEventIdx().map(i => DADOS.eventos[i]);
   const total  = evs.reduce((s,e) => s + ((e.custos && e.custos.total) || 0), 0);
   const itens  = evs.flatMap(e => (e.custos && e.custos.itens) || []);
+  const deals  = evs.flatMap(e => e.deals || []);
   const locais = [...new Set(evs.map(e => e.local).filter(Boolean))];
   const datas  = [...new Set(evs.map(e => e.data_evento).filter(Boolean))];
   const atual  = evs.map(e => e.atualizado_em).filter(Boolean).sort().slice(-1)[0] || "";
   return {
-    evs, multi: evs.length !== 1,
-    deals: evs.flatMap(e => e.deals),
-    custos: { total, itens },
+    evs, multi: evs.length !== 1, total, itens, deals,
     nome: evs.length === 1 ? evs[0].nome : `${evs.length} eventos selecionados`,
     locais, datas, atual,
   };
@@ -1013,24 +991,11 @@ function buildView(){
 
 function render(){
   const view = buildView();
-  const allDeals = view.deals;
-
-  const respAll  = msResp.isAll();
-  const respSet  = new Set(msResp.values());
-  const filtered = respAll ? allDeals : allDeals.filter(d => respSet.has(d.r));
-  const filtrando = !respAll;
-
-  const cnt = f => filtered.filter(d => d.f === f).length;
-  const base = filtered.length;
-  const compareceu = cnt(FASE.COMP);
-  const recusou    = cnt(FASE.REC);
-  const noshow     = cnt(FASE.NOSHOW);
-  const pending    = cnt(FASE.AG);
-  const confirmados = compareceu + noshow;
-
-  const taxaComp = base ? compareceu / base : 0;
-  const taxaEntreConf = confirmados ? compareceu / confirmados : 0;
-  const taxaRecusa = base ? recusou / base : 0;
+  const itens = view.itens;
+  const total = view.total;
+  const presentes = view.deals.filter(d => d.f === FASE.COMP).length;
+  const custoPart = presentes ? total / presentes : 0;
+  const nCat = new Set(itens.map(i => i.categoria)).size;
 
   /* masthead + rodapé */
   document.getElementById("ev-nome").innerHTML =
@@ -1046,85 +1011,46 @@ function render(){
   document.getElementById("foot-date").textContent = view.atual ? fmtDate(view.atual) : "—";
 
   /* nota do filtro */
-  const nResp = respUnion(selectedEventIdx()).length;
-  const nSel  = msResp.values().length;
   const escopo = view.multi ? `<b>${view.evs.length}</b> de <b>${DADOS.eventos.length}</b> eventos · ` : "";
-  document.getElementById("f-info").innerHTML = filtrando
-    ? `${escopo}Mostrando <b>${base}</b> convidados de <b>${nSel}</b> ${nSel===1?"responsável":"responsáveis"}.`
-    : `${escopo}Todos os <b>${base}</b> convidados · <b>${nResp}</b> responsáveis.`;
+  document.getElementById("f-info").innerHTML =
+    `${escopo}Investimento total de <b>${brl(total)}</b> em <b>${itens.length}</b> ${itens.length===1?"item":"itens"}.`;
 
   /* hero */
   const hero = [
-    { lbl:"Compareceram", fig:compareceu, feature:true, sub:`<b>${pct(taxaComp)}</b> da base · ${pct(taxaEntreConf)} dos confirmados` },
-    { lbl:"Recusaram", fig:recusou, sub:`<b>${pct(taxaRecusa)}</b> ${filtrando ? "deste responsável" : "da base convidada"}` },
-    { lbl:"Confirmou mas não compareceu", fig:noshow, sub:`confirmaram presença e faltaram` },
-    { lbl:"Aguardando confirmação", fig:pending, sub:`ainda não responderam ao convite` }
+    { lbl:"Investimento total", fig:brl0(total), feature:true, sub:`<b>${itens.length}</b> ${itens.length===1?"item lançado":"itens lançados"}` },
+    { lbl:"Custo por participante", fig:brl0(custoPart), sub:`÷ <b>${presentes}</b> ${presentes===1?"presente":"presentes"}` },
+    { lbl:"Itens lançados", fig:itens.length, sub:`na planilha de custos` },
+    { lbl:"Categorias de gasto", fig:nCat, sub:`tipos diferentes` }
   ];
   document.getElementById("hero").innerHTML = hero.map(k => `
     <div class="kpi${k.feature?' feature':''}">
       <div class="lbl">${k.lbl}</div><div class="fig">${k.fig}</div><div class="sub">${k.sub}</div>
     </div>`).join("");
 
-  /* stack */
-  const segs = [
-    { t:"Compareceram", n:compareceu, c:"var(--attend)" },
-    { t:"Recusaram", n:recusou, c:"var(--decline)" },
-    { t:"Confirmaram e faltaram", n:noshow, c:"var(--noshow)" },
-    { t:"Aguardando confirmação", n:pending, c:"var(--pending)" }
-  ];
-  document.getElementById("stack").innerHTML = segs.map(s => {
-    const w = base ? s.n/base*100 : 0;
-    return `<div class="seg" style="flex:${s.n}; background:${s.c}">${w>7?`<span>${s.n}</span>`:""}</div>`;
-  }).join("");
-  document.getElementById("legend").innerHTML = segs.map(s => `
-    <div class="lg"><span class="sw" style="background:${s.c}"></span>
-      <span class="n">${s.n}</span><span class="t">${s.t}</span>
-      <span class="p">${base?pct(s.n/base):"0%"}</span></div>`).join("");
+  /* categorias — coluna "Categoria gasto" da planilha */
+  const catMap = {};
+  itens.forEach(i => { catMap[i.categoria] = (catMap[i.categoria]||0) + i.total; });
+  const cats = Object.entries(catMap).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const catMax = cats.length ? Math.max(...cats.map(c=>c[1])) : 0;
+  document.getElementById("cats").innerHTML = cats.length ? cats.map(([name,v]) => `
+    <div class="cat"><div class="cname">${esc(name)}</div>
+      <div class="ctrack"><div class="cfill" style="width:${catMax?v/catMax*100:0}%"></div></div>
+      <div class="cval">${brl(v)}</div></div>`).join("")
+    : `<div class="empty">Nenhum gasto lançado para este filtro.</div>`;
 
-  /* recusas — filtradas */
-  const comMotivo = filtered.filter(d => d.f === FASE.REC && d.mot && d.mot.trim());
-  const reasonsEl = document.getElementById("reasons");
-  const noteEl = document.getElementById("reasons-note");
-  const insightEl = document.getElementById("insight");
-  if (recusou === 0){
-    reasonsEl.innerHTML = `<div class="empty">Nenhuma recusa neste filtro. 🎉</div>`;
-    noteEl.innerHTML = ""; insightEl.style.display = "none";
-  } else if (comMotivo.length === 0){
-    reasonsEl.innerHTML = `<div class="empty">Nenhum motivo de recusa registrado no HubSpot para este filtro.</div>`;
-    noteEl.innerHTML = `<b>${recusou}</b> recusas — nenhuma com motivo anotado.`;
-    insightEl.style.display = "none";
-  } else {
-    reasonsEl.innerHTML = comMotivo.map(d => `
-      <div class="reason">
-        <div class="rtext">${d.mot.trim()}</div>
-        <div class="rwho">${d.n}<span class="sep">·</span><span class="brand">${d.m}</span></div>
-      </div>`).join("");
-    noteEl.innerHTML = `Motivo registrado em <b>${comMotivo.length}</b> das <b>${recusou}</b> recusas · <b>${recusou-comMotivo.length}</b> sem motivo anotado no HubSpot.`;
-    insightEl.style.display = "none";
-  }
-
-  /* confirmaram mas não compareceram — filtrado */
-  const noshowDeals = filtered.filter(d => d.f === FASE.NOSHOW);
-  const nsEl = document.getElementById("noshow-list");
-  const nsNote = document.getElementById("noshow-note");
-  if (noshowDeals.length === 0){
-    nsEl.innerHTML = `<div class="empty">Ninguém confirmou presença e faltou neste filtro. 🎯</div>`;
-    nsNote.innerHTML = "";
-  } else {
-    nsEl.innerHTML = noshowDeals.map(d => `
-      <div class="ns-item"><div class="nm">${d.n}</div><div class="br">${d.m}</div></div>`).join("");
-    nsNote.innerHTML = `<b>${noshowDeals.length}</b> ${noshowDeals.length===1?"pessoa confirmou":"pessoas confirmaram"} presença e não compareceu${noshowDeals.length===1?"":"ram"} ao evento.`;
-  }
+  /* tabela de itens */
+  document.getElementById("cost-body").innerHTML = itens.length ? itens.map(i => `
+    <tr><td><span class="it">${esc(i.item)}</span>${i.obs?`<span class="ob">${esc(i.obs)}</span>`:""}<span class="cattag">${esc(i.categoria)}</span></td>
+      <td class="num">${i.qtd}</td><td class="num">${brl(i.unit)}</td>
+      <td class="num ${i.total===0?'z':''}">${brl(i.total)}</td>
+      <td><span class="pill ${String(i.status).toLowerCase()}">${esc(i.status)}</span></td></tr>`).join("")
+    : `<tr><td colspan="5"><div class="empty">Nenhum item de custo para este filtro.</div></td></tr>`;
+  document.getElementById("cost-total").textContent = brl(total);
 }
 
 function init(){
   msEvento = createMultiSelect(document.getElementById("ms-evento"), {
-    allLabel: "Todos os eventos", noun: "eventos",
-    onChange: () => { refreshRespOptions(); render(); },   // trocar evento reajusta a lista de responsáveis
-  });
-  msResp = createMultiSelect(document.getElementById("ms-resp"), {
-    allLabel: "Todos os responsáveis", noun: "responsáveis",
-    onChange: render,
+    allLabel: "Todos os eventos", noun: "eventos", onChange: render,
   });
   rebuildFilters();
   render();
