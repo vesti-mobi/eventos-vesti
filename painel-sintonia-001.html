@@ -130,7 +130,7 @@
   .sec-head .idx { font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-faint); }
 
   /* ---------- Hero KPIs ---------- */
-  .hero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line);
+  .hero { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 1px; background: var(--line);
           border: 1px solid var(--line); border-radius: 3px; overflow: hidden; margin-top: 22px; }
   .kpi { background: var(--paper); padding: 26px 22px 24px; }
   .kpi.feature { background: var(--wine); color: #F4E9E2; }
@@ -1066,6 +1066,8 @@ function render(){
   const taxaComp = base ? compareceu / base : 0;
   const taxaEntreConf = confirmados ? compareceu / confirmados : 0;
   const taxaRecusa = base ? recusou / base : 0;
+  const taxaConf  = base ? confirmou / base : 0;
+  const nComp     = filtered.filter(d => d.ac && d.ac.trim()).length;
 
   /* masthead + rodapé */
   document.getElementById("ev-nome").innerHTML =
@@ -1088,18 +1090,38 @@ function render(){
     ? `${escopo}Mostrando <b>${base}</b> convidados de <b>${nSel}</b> ${nSel===1?"responsável":"responsáveis"}.`
     : `${escopo}Todos os <b>${base}</b> convidados · <b>${nResp}</b> responsáveis.`;
 
-  /* hero */
-  const hero = [
-    { lbl:"Convidado", fig:convidado, sub:`ainda na etapa de convite` },
-    { lbl:"Aguardando confirmação", fig:pending, sub:`ainda não responderam ao convite` },
-    { lbl:"Confirmou", fig:confirmou, sub:`confirmaram que viriam` },
-    { lbl:"Compareceram", fig:compareceu, feature:true, sub:`<b>${pct(taxaComp)}</b> da base · ${pct(taxaEntreConf)} dos confirmados` },
-    { lbl:"Recusaram", fig:recusou, sub:`<b>${pct(taxaRecusa)}</b> ${filtrando ? "deste responsável" : "da base convidada"}` },
-    { lbl:"Confirmou mas não compareceu", fig:noshow, sub:`confirmaram presença e faltaram` },
-    { lbl:"Funcionários da Vesti", fig:nFunc, sub:`participaram do evento` },
-    { lbl:"Total no evento", fig:totalEvento, sub:`<b>${compareceu}</b> convidados + <b>${nFunc}</b> funcionários` }
-  ];
-  document.getElementById("hero").innerHTML = hero.map(k => `
+  /* hero — dashboard dinâmico: antes da data do evento (pré) x depois (pós); com vários eventos, mostra tudo */
+  const K = {
+    convidado:  { lbl:"Convidado", fig:convidado, sub:`ainda na etapa de convite` },
+    aguardando: { lbl:"Aguardando confirmação", fig:pending, sub:`ainda não responderam ao convite` },
+    confirmou:  { lbl:"Confirmou", fig:confirmou, sub:`confirmaram que viriam` },
+    totalAcomp: { lbl:"Total de acompanhantes", fig:nComp, sub:`convidados que levaram +1` },
+    pctConf:    { lbl:"% de confirmados", fig:pct(taxaConf), sub:`de <b>${base}</b> convidados` },
+    compareceu: { lbl:"Compareceram", fig:compareceu, sub:`de <b>${base}</b> convidados` },
+    recusou:    { lbl:"Recusaram", fig:recusou, sub:`<b>${pct(taxaRecusa)}</b> ${filtrando ? "deste responsável" : "da base"}` },
+    noshow:     { lbl:"Confirmou mas não compareceu", fig:noshow, sub:`confirmaram presença e faltaram` },
+    func:       { lbl:"Funcionários da Vesti", fig:nFunc, sub:`participaram do evento` },
+    totalEv:    { lbl:"Total no evento", fig:totalEvento, sub:`<b>${compareceu}</b> convidados + <b>${nFunc}</b> funcionários` },
+    pctComp:    { lbl:"% de comparecidos", fig:pct(taxaComp), sub:`dos <b>${base}</b> convidados vieram` },
+  };
+  const parseBR = (s) => { const p = String(s || "").split("/"); if (p.length !== 3) return null; const d = new Date(+p[2], +p[1]-1, +p[0]); return isNaN(d.getTime()) ? null : d; };
+  const hojeD = new Date(); hojeD.setHours(0,0,0,0);
+  const evDate = (!view.multi && view.evs[0]) ? parseBR(view.evs[0].data_evento) : null;
+  const posEvento = evDate ? (hojeD.getTime() > evDate.getTime()) : false;   // depois da data (1 dia após) => pós; sem data => pré
+  let hero;
+  if (view.multi){                       // vários eventos: mostra tudo, menos a % de confirmados
+    K.compareceu.feature = true;
+    hero = [K.convidado, K.aguardando, K.confirmou, K.totalAcomp, K.compareceu, K.recusou, K.noshow, K.func, K.totalEv, K.pctComp];
+  } else if (posEvento){                  // depois do evento
+    K.compareceu.feature = true;
+    hero = [K.compareceu, K.recusou, K.noshow, K.func, K.totalEv, K.pctComp];
+  } else {                                // antes do evento
+    K.confirmou.feature = true;
+    hero = [K.convidado, K.aguardando, K.confirmou, K.totalAcomp, K.pctConf];
+  }
+  const heroEl = document.getElementById("hero");
+  heroEl.style.setProperty("--cols", hero.length <= 6 ? hero.length : Math.ceil(hero.length / 2));
+  heroEl.innerHTML = hero.map(k => `
     <div class="kpi${k.feature?' feature':''}">
       <div class="lbl">${k.lbl}</div><div class="fig">${k.fig}</div><div class="sub">${k.sub}</div>
     </div>`).join("");
