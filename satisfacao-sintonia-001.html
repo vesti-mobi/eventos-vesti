@@ -846,12 +846,19 @@ function render(){
 const btnRefresh = document.getElementById("btn-refresh");
 const refreshStatus = document.getElementById("refresh-status");
 
+// As funcoes que puxam a planilha ficam na Cloudflare (la moram as chaves, criptografadas).
+// A pagina continua no GitHub Pages, entao o botao pede os dados no endereco da Cloudflare.
+// Se a propria pagina ja estiver servida pela Cloudflare (ou local), usa caminho relativo.
+const API_BASE = /(^|\.)pages\.dev$/.test(location.hostname)
+  || location.hostname === "localhost" || location.hostname === "127.0.0.1"
+  ? "" : "https://eventos-vesti.pages.dev";
+
 async function atualizar(silencioso){
   btnRefresh.classList.add("loading");
   btnRefresh.disabled = true;
   if (!silencioso) refreshStatus.textContent = "Atualizando…";
   try {
-    const res = await fetch("/api/satisfacao", { cache: "no-store" });
+    const res = await fetch(API_BASE + "/api/satisfacao", { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     if (!data || !Array.isArray(data.respostas)) throw new Error("resposta inválida");
