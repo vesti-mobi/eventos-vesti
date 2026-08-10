@@ -226,6 +226,15 @@
   .ns-item .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
   .ns-item .br { margin-top: 3px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
 
+  .comps { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  @media (max-width: 620px){ .comps { grid-template-columns: 1fr; } }
+  .comp { background: var(--paper-2); border-left: 2.5px solid var(--pending); border-radius: 0 3px 3px 0; padding: 13px 16px; }
+  .comp .cn { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .comp .cof { margin-top: 4px; font-size: 12.5px; color: var(--ink-soft); }
+  .comp .cof b { color: var(--ink); font-weight: 600; }
+  .comp .cmeta { margin-top: 8px; font-family: "Archivo", sans-serif; font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
+  .comp .cmeta .stg { color: var(--wine); }
+
   footer { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-faint); }
   footer b { color: var(--ink-soft); font-weight: 600; }
 </style>
@@ -286,6 +295,14 @@
     <div class="panel">
       <div class="noshow-list" id="noshow-list"></div>
       <div class="reasons-note" id="noshow-note"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Acompanhantes</h2><span class="idx">04 — Acompanhantes</span></div>
+    <div class="panel">
+      <div class="comps" id="comps"></div>
+      <div class="reasons-note" id="comps-note"></div>
     </div>
   </section>
 
@@ -1114,6 +1131,23 @@ function render(){
     nsEl.innerHTML = noshowDeals.map(d => `
       <div class="ns-item"><div class="nm">${d.n}</div><div class="br">${d.m}</div></div>`).join("");
     nsNote.innerHTML = `<b>${noshowDeals.length}</b> ${noshowDeals.length===1?"pessoa confirmou":"pessoas confirmaram"} presença e não compareceu${noshowDeals.length===1?"":"ram"} ao evento.`;
+  }
+
+  /* acompanhantes — deals com a propriedade "acompanhante_de" preenchida (respeita o filtro atual) */
+  const comps = filtered.filter(d => d.ac && d.ac.trim());
+  const compsEl = document.getElementById("comps");
+  const compsNote = document.getElementById("comps-note");
+  if (comps.length === 0){
+    compsEl.innerHTML = `<div class="empty">Nenhum acompanhante neste filtro.</div>`;
+    compsNote.innerHTML = "";
+  } else {
+    compsEl.innerHTML = comps.map(d => `
+      <div class="comp">
+        <div class="cn">${d.n}</div>
+        <div class="cof">acompanhante de <b>${d.ac}</b></div>
+        <div class="cmeta">${d.m} · <span class="stg">${d.f}</span> · convidou: ${d.r}</div>
+      </div>`).join("");
+    compsNote.innerHTML = `<b>${comps.length}</b> ${comps.length===1?"acompanhante":"acompanhantes"} neste filtro.`;
   }
 }
 

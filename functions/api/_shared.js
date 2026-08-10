@@ -5,7 +5,7 @@
 // - Parsers de custos e do formulário de satisfação
 // - Cache de borda para não abusar do HubSpot quando muita gente clica em "Atualizar"
 
-const DEAL_PROPS = ["dealname", "dealstage", "nome_da_marca", "recusou_motivo", "hubspot_owner_id", "nome_evento"];
+const DEAL_PROPS = ["dealname", "dealstage", "nome_da_marca", "recusou_motivo", "hubspot_owner_id", "nome_evento", "acompanhante_de"];
 
 // De-para de fallback (usado só se a leitura das fases do pipeline no HubSpot falhar)
 const FASES_FALLBACK = {
@@ -305,6 +305,8 @@ export async function buildDados(env) {
     };
     const mot = (p.recusou_motivo || "").trim();
     if (mot) item.mot = mot;
+    const ac = (p.acompanhante_de || "").trim();
+    if (ac) item.ac = ac;   // preenchido só quando o deal é um acompanhante
     (porEvento[nomeEv] = porEvento[nomeEv] || []).push(item);
   }
 
@@ -342,11 +344,16 @@ export async function fetchSatisfacao(env) {
 /* ------------------------- resposta + cache de borda ------------------------- */
 export async function withCache(context, maxAgeSeconds, compute) {
   const { request } = context;
+  const url = new URL(request.url);
+  const bypass = url.searchParams.has("fresh"); // o botão "Atualizar" pede sempre dados novos (ignora o cache)
   const cache = caches.default;
-  const cacheKey = new Request(new URL(request.url).toString(), { method: "GET" });
+  // chave sem query: um clique "fresh" também aquece o cache para os acessos normais seguintes
+  const cacheKey = new Request(url.origin + url.pathname, { method: "GET" });
 
-  const hit = await cache.match(cacheKey);
-  if (hit) return hit;
+  if (!bypass) {
+    const hit = await cache.match(cacheKey);
+    if (hit) return hit;
+  }
 
   const cors = { "Content-Type": "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*" };
   try {
