@@ -295,8 +295,16 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head"><h2>Confirmaram mas não compareceram</h2><span class="idx">03 — No-show</span></div>
+  <section id="sec-confirmados">
+    <div class="sec-head"><h2>Confirmaram presença</h2><span class="idx">Pré-evento</span></div>
+    <div class="panel">
+      <div class="comps" id="conf-list"></div>
+      <div class="reasons-note" id="conf-note"></div>
+    </div>
+  </section>
+
+  <section id="sec-noshow">
+    <div class="sec-head"><h2>Confirmaram mas não compareceram</h2><span class="idx">Pós-evento</span></div>
     <div class="panel">
       <div class="noshow-list" id="noshow-list"></div>
       <div class="reasons-note" id="noshow-note"></div>
@@ -1176,8 +1184,30 @@ function render(){
   } else {
     nsEl.innerHTML = noshowDeals.map(d => `
       <div class="ns-item"><div class="nm">${d.n}</div><div class="br">${d.m}</div></div>`).join("");
-    nsNote.innerHTML = `<b>${noshowDeals.length}</b> ${noshowDeals.length===1?"pessoa confirmou":"pessoas confirmaram"} presença e não compareceu${noshowDeals.length===1?"":"ram"} ao evento.`;
+    nsNote.innerHTML = `<b>${noshowDeals.length}</b> ${noshowDeals.length===1?"pessoa confirmou":"pessoas confirmaram"} presença e não comparece${noshowDeals.length===1?"u":"ram"} ao evento.`;
   }
+
+  /* confirmados/aguardando — clientes esperados (pré-evento): etapas Confirmou + Aguardando confirmação */
+  const confList = filtered.filter(d => d.f === FASE.CONF || d.f === FASE.AG)
+    .sort((a,b) => (a.f === FASE.CONF ? 0 : 1) - (b.f === FASE.CONF ? 0 : 1));
+  const confEl = document.getElementById("conf-list");
+  const confNote = document.getElementById("conf-note");
+  if (confList.length === 0){
+    confEl.innerHTML = `<div class="empty">Ninguém confirmado ou aguardando confirmação neste filtro.</div>`;
+    confNote.innerHTML = "";
+  } else {
+    confEl.innerHTML = confList.map(d => `
+      <div class="comp">
+        <div class="cn">${d.n}</div>
+        <div class="cmeta">${d.m} · <span class="stg">${d.f}</span>${d.r ? ` · convidou: ${d.r}` : ""}</div>
+      </div>`).join("");
+    const nConf = confList.filter(d => d.f === FASE.CONF).length;
+    confNote.innerHTML = `<b>${nConf}</b> confirmaram presença · <b>${confList.length - nConf}</b> aguardando confirmação.`;
+  }
+
+  /* quadros dinâmicos: "não compareceu" só depois do evento; "confirmaram presença" antes (ou vários eventos) */
+  document.getElementById("sec-noshow").style.display = (posEvento || view.multi) ? "" : "none";
+  document.getElementById("sec-confirmados").style.display = (!posEvento || view.multi) ? "" : "none";
 
   /* acompanhantes — deals com a propriedade "acompanhante_de" preenchida (respeita o filtro atual) */
   const comps = filtered.filter(d => d.ac && d.ac.trim());
