@@ -26,6 +26,7 @@
     --pending:    #B1A38E;
     --invited:    #8A96A2;
     --confirmed:  #6E8A78;
+    --accomp:     #B06A4F;
 
     --shadow: 0 1px 2px rgba(28,25,22,.04), 0 12px 40px -18px rgba(28,25,22,.22);
     --maxw: 1500px;
@@ -1133,15 +1134,21 @@ function render(){
       <div class="lbl">${k.lbl}</div><div class="fig">${k.fig}</div><div class="sub">${k.sub}</div>
     </div>`).join("");
 
-  /* stack */
-  const segs = [
-    { t:"Compareceram", n:compareceu, c:"var(--attend)" },
-    { t:"Confirmou", n:confirmou, c:"var(--confirmed)" },
-    { t:"Aguardando confirmação", n:pending, c:"var(--pending)" },
-    { t:"Convidado", n:convidado, c:"var(--invited)" },
-    { t:"Confirmaram e faltaram", n:noshow, c:"var(--noshow)" },
-    { t:"Recusaram", n:recusou, c:"var(--decline)" }
-  ];
+  /* gráfico de colunas — categorias mudam conforme pré/pós evento */
+  const COL = {
+    convidado:  { t:"Convidado", n:convidado, c:"var(--invited)" },
+    acomp:      { t:"Convidado acompanhante", n:nComp, c:"var(--accomp)" },
+    aguardando: { t:"Aguardando confirmação", n:pending, c:"var(--pending)" },
+    confirmou:  { t:"Confirmou", n:confirmou, c:"var(--confirmed)" },
+    compareceu: { t:"Compareceram", n:compareceu, c:"var(--attend)" },
+    noshow:     { t:"Confirmaram e faltaram", n:noshow, c:"var(--noshow)" },
+    recusou:    { t:"Recusaram", n:recusou, c:"var(--decline)" },
+  };
+  const segs = view.multi
+    ? [COL.convidado, COL.acomp, COL.aguardando, COL.confirmou, COL.compareceu, COL.noshow, COL.recusou]
+    : posEvento
+      ? [COL.compareceu, COL.noshow, COL.recusou]
+      : [COL.convidado, COL.acomp, COL.aguardando, COL.confirmou];
   const maxN = Math.max(...segs.map(s => s.n), 1);
   const colsEl = document.getElementById("cols");
   colsEl.style.setProperty("--n", segs.length);
