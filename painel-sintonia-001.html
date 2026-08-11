@@ -153,15 +153,15 @@
   .panel h3 { font-family: "Archivo"; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 20px; }
 
   /* bar chart (horizontal) */
-  .bars { display: flex; flex-direction: column; gap: 16px; }
-  .bars .row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 14px; }
-  .bars .lbl { font-size: 12.5px; line-height: 1.25; color: var(--ink-soft); text-align: right; }
-  .bars .bar { height: 30px; min-width: 3px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06);
+  .bars { display: flex; flex-direction: column; gap: 22px; }
+  .bars .row { display: grid; grid-template-columns: 176px 1fr auto; align-items: center; gap: 18px; }
+  .bars .lbl { font-size: 14px; line-height: 1.25; color: var(--ink-soft); text-align: right; }
+  .bars .bar { height: 48px; min-width: 4px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(28,25,22,.06);
     transition: width .6s cubic-bezier(.2,.7,.2,1); }
-  .bars .val { font-family: "Fraunces", serif; font-weight: 600; font-size: 17px; color: var(--ink);
+  .bars .val { font-family: "Fraunces", serif; font-weight: 600; font-size: 24px; color: var(--ink);
     font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .bars .val .p { margin-left: 6px; font-family: "Archivo", sans-serif; font-weight: 400; font-size: 12px; color: var(--ink-faint); }
-  @media (max-width: 560px){ .bars .row { grid-template-columns: 104px 1fr auto; gap: 10px; } .bars .lbl { font-size: 11.5px; } .bars .val { font-size: 15px; } }
+  .bars .val .p { margin-left: 8px; font-family: "Archivo", sans-serif; font-weight: 400; font-size: 13px; color: var(--ink-faint); }
+  @media (max-width: 560px){ .bars .row { grid-template-columns: 116px 1fr auto; gap: 12px; } .bars .lbl { font-size: 12px; } .bars .bar { height: 38px; } .bars .val { font-size: 19px; } }
 
   .funnel { display: flex; flex-direction: column; gap: 10px; }
   .fstep { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; }
@@ -1002,6 +1002,11 @@ function createMultiSelect(mount, { allLabel, noun, onChange }){
       selected = normalize(new Set([...selected].filter(v => valid.has(v))));
       draw();
     },
+    setSelected(values){                            // define a seleção (ex.: padrão = evento mais recente)
+      const valid = new Set(allValues());
+      selected = normalize(new Set(values.filter(v => valid.has(v))));
+      draw();
+    },
     values: effective,   // lista efetiva de valores marcados (todos, se vazio)
     isAll,
   };
@@ -1009,8 +1014,16 @@ function createMultiSelect(mount, { allLabel, noun, onChange }){
 
 /* ---------- estado dos filtros ---------- */
 let msEvento, msResp;
+let eventoTouched = false;   // vira true quando a usuária escolhe o evento manualmente
 
 const eventOptions = () => DADOS.eventos.map((e,i) => ({ value:String(i), label:e.nome }));
+
+const parseBR = (s) => { const p = String(s || "").split("/"); if (p.length !== 3) return null; const d = new Date(+p[2], +p[1]-1, +p[0]); return isNaN(d.getTime()) ? null : d; };
+function mostRecentEventIdx(){
+  let best = DADOS.eventos.length - 1, bestT = -Infinity;
+  DADOS.eventos.forEach((e,i) => { const d = parseBR(e.data_evento); const t = d ? d.getTime() : -Infinity; if (t >= bestT){ bestT = t; best = i; } });
+  return best;
+}
 
 function selectedEventIdx(){
   return msEvento.values()
@@ -1028,6 +1041,9 @@ function refreshRespOptions(){
 }
 function rebuildFilters(){
   msEvento.setOptions(eventOptions());
+  if (!eventoTouched && DADOS.eventos.length > 1){   // padrão: evento mais recente (não "todos")
+    msEvento.setSelected([String(mostRecentEventIdx())]);
+  }
   refreshRespOptions();
 }
 
@@ -1111,7 +1127,6 @@ function render(){
     totalEv:    { lbl:"Total no evento", fig:totalEvento, sub:`<b>${compareceu}</b> convidados + <b>${nFunc}</b> funcionários` },
     pctComp:    { lbl:"% de comparecidos", fig:pct(taxaComp), sub:`dos <b>${base}</b> convidados vieram` },
   };
-  const parseBR = (s) => { const p = String(s || "").split("/"); if (p.length !== 3) return null; const d = new Date(+p[2], +p[1]-1, +p[0]); return isNaN(d.getTime()) ? null : d; };
   const hojeD = new Date(); hojeD.setHours(0,0,0,0);
   const evDate = (!view.multi && view.evs[0]) ? parseBR(view.evs[0].data_evento) : null;
   const posEvento = evDate ? (hojeD.getTime() > evDate.getTime()) : false;   // depois da data (1 dia após) => pós; sem data => pré
@@ -1249,7 +1264,7 @@ function render(){
 function init(){
   msEvento = createMultiSelect(document.getElementById("ms-evento"), {
     allLabel: "Todos os eventos", noun: "eventos",
-    onChange: () => { refreshRespOptions(); render(); },   // trocar evento reajusta a lista de responsáveis
+    onChange: () => { eventoTouched = true; refreshRespOptions(); render(); },   // trocar evento reajusta a lista de responsáveis
   });
   msResp = createMultiSelect(document.getElementById("ms-resp"), {
     allLabel: "Todos os responsáveis", noun: "responsáveis",
